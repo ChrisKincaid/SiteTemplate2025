@@ -12,6 +12,6 @@ export const routes: Routes = [
     {path: 'post', component: SinglePost},
 
     {path: 'about', component: AboutUs},
-    {path: 'term-conditions', component: Terms},
+    {path: 'terms', component: Terms},
     {path: 'contact', component: ContactUs}
 ];
