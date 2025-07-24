@@ -1,8 +1,25 @@
 nav{
-    margin-top: 100px;
-    height: 50px;
-    background-color: var(--navbar-footer-color);;
+    top: 100px; /* Position below the header */
+    min-height: 50px; /* Minimum height, can grow as needed */
+    background-color: var(--navbar-footer-color);
+    z-index: 1000; /* Ensure it stays above other content */
+    display: flex !important; /* Always show, never collapse */
+    padding: 0.5rem 0; /* Add some vertical padding */
 }
+
+.navbar-nav {
+    flex-direction: row !important; /* Keep horizontal even on mobile */
+    flex-wrap: wrap; /* Allow wrapping on very small screens */
+    justify-content: center; /* Center the items */
+    align-items: center; /* Vertically center items */
+    width: 100%; /* Take full width */
+}
+
 .nav-link{
     text-transform: uppercase;
+    color: var(--body-text-color) !important; /* Ensure text is visible */
+    text-decoration: none;
+    padding: 0.25rem 0.75rem; /* More compact padding for multiple categories */
+    margin: 0.1rem; /* Small margin between items */
+    white-space: nowrap; /* Prevent text wrapping within individual links */
 }
