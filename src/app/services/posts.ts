@@ -1,0 +1,26 @@
+import { Injectable } from '@angular/core';
+import { Firestore, collection, addDoc, collectionData } from '@angular/fire/firestore';
+import { map, Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class Posts {
+
+  constructor(private firestore: Firestore) {}
+
+  loadData(): Observable<any[]> {
+    // Modern Firebase v9+ syntax for loading collection data
+    const postsRef = collection(this.firestore, 'posts');
+    return collectionData(postsRef, { idField: 'id' }).pipe(
+      map(posts => {
+        const mappedPosts = posts.map(post => ({
+          id: post['id'],
+          data: post
+        }));
+        return mappedPosts;
+      })
+    );
+  }
+  
+}
