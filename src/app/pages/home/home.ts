@@ -24,7 +24,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.subscription = this.postService.loadData().subscribe({
       next: (val: any) => {
-        console.log('Posts loaded:', val);
         this.postsArray = val;
         
         // Filter featured posts
@@ -33,8 +32,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         // Get latest posts (ALL posts, sorted by creation date - newest first)
         this.latestPosts = val
           .sort((a: any, b: any) => b.data.createdAt.seconds - a.data.createdAt.seconds);
-        
-        console.log('Featured posts:', this.featuredPosts);
         
         // Use setTimeout to avoid change detection issues
         setTimeout(() => {
@@ -74,8 +71,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       
       // Force start cycling
       $('#featuredCarousel').carousel('cycle');
-      
-      console.log('Carousel initialized and cycling with', this.featuredPosts.length, 'featured posts');
     }
   }
 
@@ -95,11 +90,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onImageError(event: any, post: any) {
     console.error('Image failed to load:', post.data.postImgPath, 'for post:', post.data.title);
-    console.log('Full post data:', post);
   }
 
   onImageLoad(event: any, post: any) {
-    console.log('Image loaded successfully:', post.data.postImgPath);
+    // Image loaded successfully - no logging needed
   }
 
 }

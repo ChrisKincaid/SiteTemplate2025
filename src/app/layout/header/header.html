@@ -1,6 +1,18 @@
-<header class=" navbar navbar-expand-lg fixed-top bg-light">
-
-    <div class="container justify-content-center">
+<header class="navbar navbar-expand-lg fixed-top bg-light">
+    <div class="container">
+        <!-- Logo -->
         <a href="#" class="site-logo">Site Logo for Header</a>
+        
+        <!-- Subscription Dropdown -->
+        <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle btn-theme" type="button" id="subscribeDropdown" 
+                    data-toggle="dropdown" aria-expanded="false">
+                Subscribe
+            </button>
+            <div class="dropdown-menu dropdown-menu-right p-3" aria-labelledby="subscribeDropdown" style="min-width: 300px;">
+                <h6 class="dropdown-header">Subscribe to Our Newsletter</h6>
+                <app-subscription-form></app-subscription-form>
+            </div>
+        </div>
     </div>
 </header>

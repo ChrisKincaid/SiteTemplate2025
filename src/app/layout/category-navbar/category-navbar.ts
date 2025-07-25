@@ -20,17 +20,11 @@ export class CategoryNavbar implements OnInit {
   ) { }
 
   ngOnInit() {
-    // console.log('CategoryNavbar ngOnInit called');
     this.categoryService.loadData().subscribe({
       next: (val) => {
-        // console.log('Categories loaded:', val);
-        // console.log('Number of categories:', val?.length);
-        // console.log('First category structure:', JSON.stringify(val[0], null, 2));
         this.categoryArray = val;
-        // console.log('categoryArray after assignment:', this.categoryArray);
         // Force change detection
         this.cdr.detectChanges();
-        // console.log('Change detection triggered');
       },
       error: (error) => {
         console.error('Error loading categories:', error);

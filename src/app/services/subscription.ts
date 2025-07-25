@@ -16,11 +16,8 @@ export class SubscriptionService {
   constructor(private firestore: Firestore) {}
 
   async addSubscription(name: string, email: string): Promise<{ success: boolean; message: string }> {
-    console.log('addSubscription called with:', { name, email });
-    
     try {
       // Check for existing subscription
-      console.log('Checking for existing subscription...');
       const subscriptionsRef = collection(this.firestore, 'subscriptions');
       const emailQuery = query(
         subscriptionsRef, 
@@ -30,14 +27,11 @@ export class SubscriptionService {
       const existingDocs = await getDocs(emailQuery);
       
       if (!existingDocs.empty) {
-        console.log('Email already exists in database');
         return {
           success: false,
           message: 'This email is already subscribed to our newsletter.'
         };
       }
-      
-      console.log('Email not found, adding new subscription...');
       
       const subscriptionData: Subscription = {
         name: name.trim(),
@@ -45,8 +39,6 @@ export class SubscriptionService {
         subscribedAt: new Date(),
         status: 'active'
       };
-
-      console.log('Subscription data prepared:', subscriptionData);
 
       const addPromise = addDoc(subscriptionsRef, subscriptionData);
       const result = await Promise.race([
@@ -56,7 +48,6 @@ export class SubscriptionService {
         )
       ]);
       
-      console.log('Subscription added successfully:', result);
       return {
         success: true,
         message: 'Thank you for subscribing! You will receive our latest updates.'

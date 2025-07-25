@@ -32,7 +32,6 @@ export class SinglePost implements OnInit, OnDestroy {
     // Listen to route parameter changes instead of using snapshot
     this.routeSubscription = this.route.paramMap.subscribe(params => {
       const postId = params.get('id');
-      console.log('Post ID from route:', postId);
       
       if (postId) {
         this.loadPostData(postId);
@@ -43,12 +42,8 @@ export class SinglePost implements OnInit, OnDestroy {
   private loadPostData(postId: string) {
     this.subscription = this.postService.loadData().subscribe({
       next: (posts: any[]) => {
-        console.log('All posts loaded:', posts.length);
-        console.log('Looking for post with ID:', postId);
-        
         // Find the current post by ID
         this.currentPost = posts.find(post => post.id === postId);
-        console.log('Found current post:', this.currentPost?.data?.title);
         
         // Increment view count for this post (only once per session)
         if (this.currentPost && !this.viewedPosts.has(this.currentPost.id)) {
@@ -58,12 +53,10 @@ export class SinglePost implements OnInit, OnDestroy {
         
         // Get featured posts for sidebar
         this.featuredPosts = posts.filter(post => post.data.isFeatured === true);
-        console.log('Featured posts:', this.featuredPosts.length);
         
         // Get 3 random featured posts for sidebar (excluding current post)
         const availableFeatured = this.featuredPosts.filter(post => post.id !== postId);
         this.randomFeaturedPosts = this.getRandomPosts(availableFeatured, 3);
-        console.log('Random featured posts for sidebar:', this.randomFeaturedPosts.length);
         
         // Trigger change detection
         this.cdr.detectChanges();

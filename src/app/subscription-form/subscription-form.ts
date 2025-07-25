@@ -47,11 +47,9 @@ export class SubscriptionForm {
 
     // Submit subscription
     this.isSubmitting = true;
-    console.log('Starting subscription process for:', this.email);
     
     try {
       const result = await this.subscriptionService.addSubscription(this.name, this.email);
-      console.log('Subscription result:', result);
       
       if (result.success) {
         this.showMessage(result.message, 'success');
@@ -63,7 +61,6 @@ export class SubscriptionForm {
       console.error('Subscription error:', error);
       this.showMessage('An unexpected error occurred. Please try again.', 'error');
     } finally {
-      console.log('Setting isSubmitting to false');
       this.isSubmitting = false;
       this.cdr.detectChanges(); // Force change detection
     }

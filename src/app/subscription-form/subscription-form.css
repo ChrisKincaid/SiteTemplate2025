@@ -71,3 +71,38 @@
     width: 0.875rem;
     height: 0.875rem;
 }
+
+/* Dropdown-specific styling */
+.dropdown-menu .card {
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    margin: 0;
+}
+
+.dropdown-menu .subs-text {
+    width: 100%;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+/* Dropdown form adjustments */
+.dropdown-menu .no-gutters > .col-5,
+.dropdown-menu .no-gutters > .col-2 {
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+}
+
+/* Smaller inputs for dropdown */
+.dropdown-menu .no-gutters .form-control,
+.dropdown-menu .no-gutters .btn {
+    height: 38px !important;
+    font-size: 14px;
+}
+
+/* Dropdown alert styling */
+.dropdown-menu .alert {
+    margin-bottom: 10px !important;
+    padding: 8px 12px;
+    font-size: 13px;
+}

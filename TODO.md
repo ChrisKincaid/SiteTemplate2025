@@ -2,6 +2,16 @@
 
 ## 🔄 Pending Tasks
 
+### Security & Abuse Prevention
+- [ ] **Implement Firestore Security Rules**: Add rate limiting and validation for subscription creation
+- [ ] **Frontend Rate Limiting**: Add cooldown period (5-10 min) before allowing resubmission
+- [ ] **Email Validation Enhancement**: Check for disposable/temp email providers, validate domains
+- [ ] **CAPTCHA Integration**: Add Google reCAPTCHA v3 for bot detection
+- [ ] **Server-Side Protection**: IP-based rate limiting, honeypot fields
+- [ ] **Firebase Extensions**: Delete old/inactive subscriptions, limit collection growth
+- [ ] **Monitoring & Alerts**: Set up Firebase monitoring for unusual write patterns
+- [ ] **Database Design Protection**: Soft limits (1000/day), subcollections, cleanup functions
+
 ### Components
 - [ ] **PostCard Component**: Re-add PostCard import to `app.ts` when needed in tutorial
   - Currently removed to fix infinite rebuild loop

@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { Header } from './layout/header/header';
 import { CategoryNavbar } from './layout/category-navbar/category-navbar';
 import { Footer } from './layout/footer/footer';
-import { SubscriptionForm } from './subscription-form/subscription-form';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +10,7 @@ import { SubscriptionForm } from './subscription-form/subscription-form';
     RouterOutlet, 
     Header, 
     CategoryNavbar, 
-    Footer, 
-    SubscriptionForm
+    Footer
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

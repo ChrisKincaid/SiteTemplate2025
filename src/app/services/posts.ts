@@ -29,7 +29,6 @@ export class Posts {
       await updateDoc(postRef, {
         views: increment(1)
       });
-      console.log('View count incremented for post:', postId);
     } catch (error) {
       console.error('Error incrementing views:', error);
       // Fail silently - don't break the user experience if view tracking fails

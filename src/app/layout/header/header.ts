@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { SubscriptionForm } from '../../subscription-form/subscription-form';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [SubscriptionForm],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
