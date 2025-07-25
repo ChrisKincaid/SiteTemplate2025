@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Categories } from '../../services/categories';
 
 @Component({
@@ -14,7 +15,8 @@ export class CategoryNavbar implements OnInit {
 
   constructor( 
     private categoryService: Categories,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -38,6 +40,10 @@ export class CategoryNavbar implements OnInit {
 
   trackByFn(index: number, item: any) {
     return item.id;
+  }
+
+  onCategoryClick(category: any) {
+    this.router.navigate(['/category', category.id]);
   }
 
 }

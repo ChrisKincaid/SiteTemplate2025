@@ -4,7 +4,8 @@
     <div class="navbar-nav justify-content-center w-100">
         <a class="nav-link ml-3" 
            *ngFor="let category of categoryArray; trackBy: trackByFn" 
-           href="#">
+           (click)="onCategoryClick(category)"
+           [style.cursor]="'pointer'">
            {{ category?.data?.category || 'Loading...' }}
         </a>
         

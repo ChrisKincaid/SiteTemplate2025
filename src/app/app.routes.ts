@@ -8,7 +8,7 @@ import { ContactUs } from './pages/contact-us/contact-us';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
-    {path: 'category', component: SingleCategory},
+    {path: 'category/:id', component: SingleCategory},
     {path: 'post/:id', component: SinglePost},
 
     {path: 'about', component: AboutUs},

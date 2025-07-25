@@ -1,29 +1,20 @@
 <div class="bg-theme p-5">
     <div class="container">
-        <h1 class="text-white">General Knowledge</h1>
-        <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <h1 class="text-white">{{ categoryName }}</h1>
     </div>
 </div>
 
 <div class="container mt-5 mb-5">
     <div class="row">
-        <div class="col-md-4 mb-3">
-            <app-post-card></app-post-card>
+        <div class="col-md-4 mb-3" 
+             *ngFor="let post of categoryPosts; trackBy: trackByFn">
+            <app-post-card [postData]="post"></app-post-card>
         </div>
-        <div class="col-md-4 mb-3">
-            <app-post-card></app-post-card>
-        </div>
-        <div class="col-md-4 mb-3">
-            <app-post-card></app-post-card>
-        </div>
-        <div class="col-md-4 mb-3">
-            <app-post-card></app-post-card>
-        </div>
-        <div class="col-md-4 mb-3">
-            <app-post-card></app-post-card>
-        </div>
-        <div class="col-md-4 mb-3">
-            <app-post-card></app-post-card>
+        
+        <!-- Show message if no posts found -->
+        <div *ngIf="categoryPosts.length === 0" class="col-12 text-center">
+            <h3>No posts found in this category yet.</h3>
+            <p>Check back later for new content!</p>
         </div>
     </div>
 </div>
