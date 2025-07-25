@@ -55,3 +55,23 @@ input[type = text], input[type = email]{
     font-size: 13px;
     background-color: var(--primary-color);
 }
+
+/* GLOBAL FIX: Profile button horizontal layout */
+.user-profile-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+}
+
+.user-profile-btn .profile-img {
+    margin-right: 8px !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.user-profile-btn .username-text {
+    display: inline-block !important;
+    vertical-align: middle !important;
+}

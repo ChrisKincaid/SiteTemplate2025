@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
     <div class="btn-group" *ngIf="!currentUser">
       <button 
         type="button" 
-        class="btn btn-outline-primary btn-sm dropdown-toggle" 
+        class="btn btn-info btn-theme" 
         data-toggle="dropdown" 
         aria-haspopup="true" 
         aria-expanded="false">
@@ -153,16 +153,20 @@ import { Subscription } from 'rxjs';
     <div class="btn-group" *ngIf="currentUser">
       <button 
         type="button" 
-        class="btn btn-outline-success btn-sm dropdown-toggle d-flex align-items-center" 
+        class="btn btn-info btn-theme user-profile-btn" 
         data-toggle="dropdown" 
         aria-haspopup="true" 
-        aria-expanded="false">
+        aria-expanded="false"
+        style="display: inline-block; white-space: nowrap; overflow: hidden; max-width: 200px; min-width: 120px; text-align: left; padding-left: 12px; padding-right: 12px;">
         <img 
-          [src]="currentUser.photoURL || '/assets/default-avatar.png'" 
-          alt="Profile" 
-          class="rounded-circle me-2" 
-          style="width: 20px; height: 20px;">
-        {{ currentUser.displayName || currentUser.email }}
+          [src]="getUserImageSrc()" 
+          class="rounded-circle profile-img"
+          (error)="onImageError($event)"
+          (load)="onImageLoad($event)"
+          style="width: 20px; height: 20px; margin-right: 8px; display: inline-block; vertical-align: middle; float: left;"
+          [style.display]="showProfileImage ? 'inline-block' : 'none'"> 
+        <span style="display: inline-block; vertical-align: middle; color: rgba(255,255,255,0.7); font-size: 11px; margin-right: 6px;">Profile</span>
+        <span class="username-text" style="display: inline-block; vertical-align: middle; overflow: hidden; text-overflow: ellipsis; max-width: 120px; color: #ffffff; font-weight: 500;">{{ currentUser.displayName || currentUser.email }}</span>
       </button>
       <div class="dropdown-menu dropdown-menu-right">
         <h6 class="dropdown-header">{{ currentUser.displayName || 'User' }}</h6>
@@ -195,6 +199,64 @@ import { Subscription } from 'rxjs';
       border: 1px solid #dee2e6;
       box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     }
+    
+    
+    /* AGGRESSIVE FIX for profile button horizontal layout */
+    .user-profile-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      flex-direction: row !important;
+      white-space: nowrap !important;
+      min-width: 120px !important;
+      max-width: 200px !important;
+      gap: 8px !important;
+      text-align: left !important;
+      justify-content: flex-start !important;
+    }
+    
+    /* Triple override for Bootstrap conflicts */
+    .btn.user-profile-btn,
+    .btn-group .btn.user-profile-btn,
+    .dropdown-toggle.user-profile-btn {
+      display: inline-flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      flex-wrap: nowrap !important;
+    }
+    
+    .profile-img {
+      width: 20px !important;
+      height: 20px !important;
+      flex-shrink: 0 !important;
+      order: 1 !important;
+      margin-right: 8px !important;
+      margin-left: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      float: none !important;
+      display: inline-block !important;
+    }
+    
+    .username-text {
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      flex: 1 !important;
+      text-align: left !important;
+      order: 2 !important;
+      display: inline-block !important;
+      vertical-align: middle !important;
+      line-height: 1.2 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      float: none !important;
+    }
+    
+    /* Ensure the button content flows horizontally */
+    .user-profile-btn > * {
+      display: inline-block !important;
+      vertical-align: middle !important;
+      float: none !important;
+    }
   `]
 })
 export class UserAuthComponent implements OnInit, OnDestroy {
@@ -202,6 +264,7 @@ export class UserAuthComponent implements OnInit, OnDestroy {
   activeTab: 'signin' | 'signup' = 'signin';
   isLoading = false;
   errorMessage = '';
+  showProfileImage = true;
   
   signInData = {
     email: '',
@@ -224,6 +287,7 @@ export class UserAuthComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authSubscription = this.authService.user$.subscribe(user => {
       this.currentUser = user;
+      this.showProfileImage = true; // Reset image visibility for new user
       this.cdr.detectChanges();
     });
   }
@@ -294,6 +358,21 @@ export class UserAuthComponent implements OnInit, OnDestroy {
 
   async signOut() {
     await this.authService.signOut();
+  }
+
+  onImageError(event: any): void {
+    this.showProfileImage = false;
+  }
+
+  onImageLoad(event: any): void {
+    this.showProfileImage = true;
+  }
+
+  getUserImageSrc(): string {
+    if (this.currentUser?.photoURL) {
+      return this.currentUser.photoURL;
+    }
+    return '/assets/default-avatar.png';
   }
 
   private resetForms() {
