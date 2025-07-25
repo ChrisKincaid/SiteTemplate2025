@@ -40,6 +40,8 @@
 - [ ] Implement error handling UI for Firebase connection issues
 - [ ] Add loading states for better UX
 - [ ] **Max Featured Articles Limit**: Implement limit on number of featured articles displayed
+- [ ] **Add search function with priority results**: Implement search functionality with weighted/priority result ranking
+- [ ] **Make header shrink on scroll**: Implement collapsing header that becomes smaller when user scrolls down
 
 ---
 *Last Updated: July 24, 2025*

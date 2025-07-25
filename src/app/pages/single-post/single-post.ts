@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostCard } from '../../layout/post-card/post-card';
 import { CommentForm } from '../../comments/comment-form/comment-form';
 import { CommentList } from '../../comments/comment-list/comment-list';
@@ -22,6 +22,7 @@ export class SinglePost implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private postService: Posts,
     private cdr: ChangeDetectorRef
   ) {}
@@ -78,5 +79,14 @@ export class SinglePost implements OnInit, OnDestroy {
   private getRandomPosts(posts: any[], count: number): any[] {
     const shuffled = [...posts].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
+  }
+
+  onSubcategoryClick(subcategory: string) {
+    // Navigate to category page with subcategory parameter
+    this.router.navigate(['/category', 'subcategory'], { queryParams: { name: subcategory } });
+  }
+
+  trackBySubcategory(index: number, item: string) {
+    return item;
   }
 }

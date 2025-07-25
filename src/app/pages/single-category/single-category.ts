@@ -16,6 +16,8 @@ export class SingleCategory implements OnInit, OnDestroy {
   
   categoryId: string = '';
   categoryName: string = 'Loading...';
+  subcategoryName: string = ''; // Add subcategory support
+  isSubcategoryMode: boolean = false; // Track if we're showing subcategory
   postsArray: any[] = [];
   categoryPosts: any[] = [];
   private subscription?: Subscription;
@@ -28,12 +30,23 @@ export class SingleCategory implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // Get category ID from route parameters
-    this.route.paramMap.subscribe(params => {
-      this.categoryId = params.get('id') || '';
-      this.loadCategoryData();
-      this.loadCategoryPosts();
-    });
+    // Check if this is a subcategory route
+    if (this.route.snapshot.url[1]?.path === 'subcategory') {
+      this.isSubcategoryMode = true;
+      this.route.queryParams.subscribe(params => {
+        this.subcategoryName = params['name'] || '';
+        this.categoryName = this.subcategoryName;
+        this.loadSubcategoryPosts();
+      });
+    } else {
+      // Regular category mode
+      this.isSubcategoryMode = false;
+      this.route.paramMap.subscribe(params => {
+        this.categoryId = params.get('id') || '';
+        this.loadCategoryData();
+        this.loadCategoryPosts();
+      });
+    }
   }
 
   ngOnDestroy() {
@@ -67,6 +80,22 @@ export class SingleCategory implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading posts:', error);
+      }
+    });
+  }
+
+  loadSubcategoryPosts() {
+    this.subscription = this.postService.loadData().subscribe({
+      next: (posts: any) => {
+        // Filter posts that contain this subcategory
+        this.categoryPosts = posts.filter((post: any) => 
+          post.data.subcategories && 
+          post.data.subcategories.includes(this.subcategoryName)
+        );
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading subcategory posts:', error);
       }
     });
   }

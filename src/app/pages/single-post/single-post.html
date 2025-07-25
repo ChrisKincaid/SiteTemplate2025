@@ -13,6 +13,19 @@
                         {{ currentPost.data.createdAt.seconds * 1000 | date:'MMM dd, yyyy' }}
                     </small>
 
+                    <!-- Subcategories Section -->
+                    <div class="mt-3 mb-2" *ngIf="currentPost.data.subcategories && currentPost.data.subcategories.length > 0">
+                        <div class="d-flex flex-wrap align-items-center">
+                            <small class="text-muted mr-2"><strong>Tags:</strong></small>
+                            <span class="subcategory-tag mr-2 mb-1" 
+                                  *ngFor="let subcategory of currentPost.data.subcategories; trackBy: trackBySubcategory"
+                                  (click)="onSubcategoryClick(subcategory)"
+                                  [style.cursor]="'pointer'">
+                                {{ subcategory }}
+                            </span>
+                        </div>
+                    </div>
+
                     <div class="mt-3 mb-2">
                         <small class="bg-light text-primary text-center">
                             <i class="fas fa-user"></i> By {{ currentPost.data.author || 'Anonymous' }}
