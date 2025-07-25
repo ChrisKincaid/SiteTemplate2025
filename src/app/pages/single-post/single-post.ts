@@ -19,6 +19,7 @@ export class SinglePost implements OnInit, OnDestroy {
   randomFeaturedPosts: any[] = [];
   private subscription?: Subscription;
   private routeSubscription?: Subscription;
+  private viewedPosts: Set<string> = new Set(); // Track viewed posts to prevent multiple increments
 
   constructor(
     private route: ActivatedRoute,
@@ -48,6 +49,12 @@ export class SinglePost implements OnInit, OnDestroy {
         // Find the current post by ID
         this.currentPost = posts.find(post => post.id === postId);
         console.log('Found current post:', this.currentPost?.data?.title);
+        
+        // Increment view count for this post (only once per session)
+        if (this.currentPost && !this.viewedPosts.has(this.currentPost.id)) {
+          this.postService.incrementViews(this.currentPost.id);
+          this.viewedPosts.add(this.currentPost.id);
+        }
         
         // Get featured posts for sidebar
         this.featuredPosts = posts.filter(post => post.data.isFeatured === true);

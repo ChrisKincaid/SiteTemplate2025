@@ -1,0 +1,34 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read access to all documents
+    match /{document=**} {
+      allow read: if true;
+    }
+    
+    // Allow limited write access to posts collection (only view count updates)
+    match /posts/{postId} {
+      allow update: if request.auth == null 
+        && request.writeFields.size() == 1 
+        && 'views' in request.writeFields
+        && request.resource.data.views == resource.data.views + 1;
+    }
+    
+    // Allow subscription creation
+    match /subscriptions/{subscriptionId} {
+      allow create: if request.auth == null
+        && request.resource.data.keys().hasAll(['name', 'email', 'subscribedAt', 'status'])
+        && request.resource.data.keys().size() == 4
+        && request.resource.data.name is string
+        && request.resource.data.email is string
+        && request.resource.data.subscribedAt is timestamp
+        && request.resource.data.status == 'active';
+    }
+    
+    // Allow read access to categories
+    match /categories/{categoryId} {
+      allow read: if true;
+    }
+  }
+}

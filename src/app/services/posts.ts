@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, collectionData, doc, updateDoc, increment } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -21,6 +21,19 @@ export class Posts {
         return mappedPosts;
       })
     );
+  }
+
+  async incrementViews(postId: string): Promise<void> {
+    try {
+      const postRef = doc(this.firestore, 'posts', postId);
+      await updateDoc(postRef, {
+        views: increment(1)
+      });
+      console.log('View count incremented for post:', postId);
+    } catch (error) {
+      console.error('Error incrementing views:', error);
+      // Fail silently - don't break the user experience if view tracking fails
+    }
   }
   
 }

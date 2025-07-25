@@ -6,16 +6,40 @@
                 Please fill out the form below to subscribe to our newsletter and stay updated with the latest news and offers.
             </p>
 
-            <form action="" class="mb-3 mt-3">
+            <form (ngSubmit)="onSubmit()" #subscriptionForm="ngForm" class="mb-3 mt-3">
+                <!-- Success/Error Message -->
+                <div *ngIf="message" class="alert mb-3" 
+                     [class.alert-success]="messageType === 'success'"
+                     [class.alert-danger]="messageType === 'error'">
+                    {{ message }}
+                </div>
+
                 <div class="row no-gutters">
                     <div class="col-5">
-                        <input type="text" class="form-control shadow-effect" placeholder="Name">        
+                        <input type="text" 
+                               class="form-control shadow-effect" 
+                               placeholder="Name"
+                               [(ngModel)]="name"
+                               name="name"
+                               required
+                               [disabled]="isSubmitting">        
                     </div>
                     <div class="col-5">
-                        <input type="email" class="form-control shadow-effect" placeholder="Email Address">        
+                        <input type="email" 
+                               class="form-control shadow-effect" 
+                               placeholder="Email Address"
+                               [(ngModel)]="email"
+                               name="email"
+                               required
+                               [disabled]="isSubmitting">        
                     </div>
                     <div class="col-2">
-                        <button type="submit" class="btn btn-info btn-block btn-theme">SUBSCRIBE</button>
+                        <button type="submit" 
+                                class="btn btn-info btn-block btn-theme"
+                                [disabled]="isSubmitting || !subscriptionForm.form.valid">
+                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+                            {{ isSubmitting ? 'SUBSCRIBING...' : 'SUBSCRIBE' }}
+                        </button>
                     </div>
                 </div>
             </form>
