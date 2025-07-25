@@ -4,6 +4,12 @@
          [alt]="postData?.data?.title || 'post card image'" 
          class="card-image-top">
 
+    <!-- Date badge - commented out but can be restored later
+    <small class="bg-light text-warning text-center date-badge">
+        {{ postData?.data?.createdAt?.seconds ? (postData.data.createdAt.seconds * 1000 | date:'MMM dd, yyyy') : 'Jan 01, 2003' }}
+    </small>
+    -->
+
     <div class="card-body">
         <small class="bg-light text-danger text-center">{{ postData?.data?.category?.category || 'Design' }}</small>
         <small *ngIf="postData?.data?.isFeatured" class="bg-light text-success text-center ml-3">Featured</small>
@@ -11,9 +17,5 @@
 
         <h5 class="mt-1">{{ postData?.data?.title || 'How to build a website with Flic!!!' }}</h5>
         <p>{{ postData?.data?.excerpt || 'Lorem ipsum dolor sit amet consectetur adipisicing elit...' }}</p>
-    
-        <small class="bg-light text-warning text-center ml-3">
-            {{ postData?.data?.createdAt?.seconds ? (postData.data.createdAt.seconds * 1000 | date:'MMM dd, yyyy') : 'Jan 01, 2003' }}
-        </small>
     </div>
 </div>
