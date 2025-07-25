@@ -30,5 +30,41 @@ service cloud.firestore {
     match /categories/{categoryId} {
       allow read: if true;
     }
+    
+    // Admin users collection (existing - keep your current setup)
+    match /users/{userId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == userId 
+        && get(/databases/$(database)/documents/users/$(userId)).data.role == "admin";
+    }
+    
+    // Public users collection - unified for comments, future purchases, etc.
+    match /users-public/{userId} {
+      allow read: if true; // Anyone can read public profiles
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false; // Users can't delete their own accounts
+      // Allow admins to moderate (block, ban users)
+      allow update: if request.auth != null 
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+    
+    // Comments - with moderation support
+    match /comments/{commentId} {
+      allow read: if resource.data.isDeleted != true && resource.data.isHidden != true; // Hide deleted/hidden comments
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && exists(/databases/$(database)/documents/users-public/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users-public/$(request.auth.uid)).data.isBlocked != true
+        && get(/databases/$(database)/documents/users-public/$(request.auth.uid)).data.isBanned != true;
+      allow update: if request.auth != null 
+        && ((request.auth.uid == resource.data.userId && request.writeFields.hasOnly(['content', 'updatedAt']))
+        || (exists(/databases/$(database)/documents/users/$(request.auth.uid)) 
+            && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin"));
+      allow delete: if request.auth != null 
+        && (request.auth.uid == resource.data.userId
+        || (exists(/databases/$(database)/documents/users/$(request.auth.uid)) 
+            && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin"));
+    }
   }
 }

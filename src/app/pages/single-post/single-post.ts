@@ -2,14 +2,13 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostCard } from '../../layout/post-card/post-card';
-import { CommentForm } from '../../comments/comment-form/comment-form';
-import { CommentList } from '../../comments/comment-list/comment-list';
+import { CommentsSectionComponent } from '../../components/comments-section/comments-section.component';
 import { Posts } from '../../services/posts';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-single-post',
-  imports: [CommonModule, PostCard, CommentForm, CommentList], 
+  imports: [CommonModule, PostCard, CommentsSectionComponent], 
   templateUrl: './single-post.html',
   styleUrl: './single-post.css'
 })
@@ -40,10 +39,13 @@ export class SinglePost implements OnInit, OnDestroy {
   }
 
   private loadPostData(postId: string) {
+    console.log('SinglePost loading data for postId:', postId);
     this.subscription = this.postService.loadData().subscribe({
       next: (posts: any[]) => {
+        console.log('Available posts:', posts.map(p => ({ id: p.id, title: p.data.title })));
         // Find the current post by ID
         this.currentPost = posts.find(post => post.id === postId);
+        console.log('Found currentPost:', this.currentPost ? { id: this.currentPost.id, title: this.currentPost.data.title } : 'NOT FOUND');
         
         // Increment view count for this post (only once per session)
         if (this.currentPost && !this.viewedPosts.has(this.currentPost.id)) {

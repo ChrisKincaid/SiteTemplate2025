@@ -36,9 +36,6 @@
                     <div [innerHTML]="currentPost.data.content"></div>
                 </div> 
             </div>
-
-            <app-comment-form></app-comment-form>
-            <app-comment-list></app-comment-list>
         
         </div>
 
@@ -49,6 +46,13 @@
             </app-post-card>
         </div>
 
+    </div>
+
+    <!-- Comments Section -->
+    <div class="row mt-5" *ngIf="currentPost && currentPost.id">
+        <div class="col-12">
+            <app-comments-section [postId]="currentPost.id"></app-comments-section>
+        </div>
     </div>
 </div>
 

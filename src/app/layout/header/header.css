@@ -5,3 +5,7 @@ header {
 .site-logo {
     font-size: 1.5rem;
 }
+
+.gap-2 {
+    gap: 0.5rem;
+}
