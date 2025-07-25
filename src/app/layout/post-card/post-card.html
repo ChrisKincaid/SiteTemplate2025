@@ -1,5 +1,5 @@
 
-<div class="card shadow-effect">
+<div class="card shadow-effect" (click)="onCardClick()" [style.cursor]="'pointer'">
     <img [src]="postData?.data?.postImg || 'https://images.pexels.com/photos/8693381/pexels-photo-8693381.jpeg'" 
          [alt]="postData?.data?.title || 'post card image'" 
          class="card-image-top">
@@ -12,7 +12,6 @@
 
     <div class="card-body">
         <small class="bg-light text-danger text-center">{{ postData?.data?.category?.category || 'Design' }}</small>
-        <small *ngIf="postData?.data?.isFeatured" class="bg-light text-success text-center ml-3">Featured</small>
         <small class="bg-light text-info text-center ml-3">Views - {{ postData?.data?.views || 0 }}</small>
 
         <h5 class="mt-1">{{ postData?.data?.title || 'How to build a website with Flic!!!' }}</h5>

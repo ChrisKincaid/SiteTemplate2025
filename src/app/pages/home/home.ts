@@ -27,9 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         // Filter featured posts
         this.featuredPosts = val.filter((post: any) => post.data.isFeatured === true);
         
-        // Get latest posts (non-featured, sorted by creation date)
+        // Get latest posts (ALL posts, sorted by creation date - newest first)
         this.latestPosts = val
-          .filter((post: any) => post.data.isFeatured !== true)
           .sort((a: any, b: any) => b.data.createdAt.seconds - a.data.createdAt.seconds);
         
         // Manually trigger change detection

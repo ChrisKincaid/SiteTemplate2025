@@ -1,35 +1,26 @@
-<div class="container">
+<div class="container" *ngIf="currentPost">
     <div class="row">
         <div class="col md-9">
 
             <div class="card shadow-effect">
-                <img    src="https://images.pexels.com/photos/6808985/pexels-photo-6808985.jpeg" 
-                        alt="" 
-                        class="card-img-top img-fluid">
+                <img [src]="currentPost.data.postImg" 
+                     [alt]="currentPost.data.title" 
+                     class="card-img-top img-fluid">
                 <div class="card-body">
-                    <small class="bg-light text-danger text-center">Design</small>
-                    <small class="bg-light text-success text-center ml-2">Featured</small>
-                    <small class="bg-light text-info text-center ml-2">Views 10001</small>
-                    <small class="bg-light text-warning text-center ml-2">Jan, 32, 2028</small>
+                    <small class="bg-light text-danger text-center">{{ currentPost.data.category.category }}</small>
+                    <small class="bg-light text-info text-center ml-2">Views {{ currentPost.data.views }}</small>
+                    <small class="bg-light text-warning text-center ml-2">
+                        {{ currentPost.data.createdAt.seconds * 1000 | date:'MMM dd, yyyy' }}
+                    </small>
 
-                    <h1 class="mt-3 mb-3">Post Title: This b a post.</h1>
-                    <p>
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aut voluptatum cum 
-                        voluptates excepturi obcaecati illum debitis repudiandae? Dignissimos dolores 
-                        tempore, deserunt placeat incidunt exercitationem ad officiis, temporibus, 
-                        expedita eveniet animi!
+                    <div class="mt-3 mb-2">
+                        <small class="bg-light text-primary text-center">
+                            <i class="fas fa-user"></i> By {{ currentPost.data.author || 'Anonymous' }}
+                        </small>
+                    </div>
 
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aut voluptatum cum 
-                        voluptates excepturi obcaecati illum debitis repudiandae? Dignissimos dolores 
-                        tempore, deserunt placeat incidunt exercitationem ad officiis, temporibus, 
-                        expedita eveniet animi!
-
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aut voluptatum cum 
-                        voluptates excepturi obcaecati illum debitis repudiandae? Dignissimos dolores 
-                        tempore, deserunt placeat incidunt exercitationem ad officiis, temporibus, 
-                        expedita eveniet animi!
-                    </p>
-
+                    <h1 class="mt-3 mb-3">{{ currentPost.data.title }}</h1>
+                    <div [innerHTML]="currentPost.data.content"></div>
                 </div> 
             </div>
 
@@ -38,12 +29,17 @@
         
         </div>
 
-
-            <div class="col-md-3">  
-                <app-post-card></app-post-card>
-                <app-post-card></app-post-card>
-                <app-post-card></app-post-card>
-            </div>
+        <div class="col-md-3">  
+            <app-post-card 
+                *ngFor="let post of randomFeaturedPosts" 
+                [postData]="post">
+            </app-post-card>
+        </div>
 
     </div>
+</div>
+
+<!-- Loading state -->
+<div class="container text-center" *ngIf="!currentPost">
+    <h3>Loading post...</h3>
 </div>
