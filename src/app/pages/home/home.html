@@ -66,8 +66,20 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 mt-3" *ngFor="let post of latestPosts.slice(0, 6); trackBy: trackByFn">
+        <div class="col-md-4 mt-3" *ngFor="let post of displayedPosts; trackBy: trackByFn">
             <app-post-card [postData]="post"></app-post-card>
+        </div>
+    </div>
+
+    <!-- Load More Button -->
+    <div class="row mt-4" *ngIf="hasMorePosts">
+        <div class="col-12 text-center">
+            <button class="btn btn-primary btn-lg" (click)="loadMorePosts()">
+                Load More
+                <small class="d-block mt-1 text-light">
+                    ({{ remainingPostsCount }} remaining)
+                </small>
+            </button>
         </div>
     </div>
 </section>

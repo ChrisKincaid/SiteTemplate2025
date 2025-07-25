@@ -14,9 +14,19 @@ declare var $: any; // jQuery declaration for TypeScript
   styleUrl: './home.css'
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+  // Make Math available in template
+  Math = Math;
+  
   postsArray: any[] = [];
   featuredPosts: any[] = [];
   latestPosts: any[] = [];
+  
+  // Pagination properties
+  displayedPosts: any[] = [];
+  currentPage: number = 1;
+  postsPerPage: number = 24;
+  loadMoreIncrement: number = 6;
+  
   private subscription?: Subscription;
 
   constructor(private postService: Posts, private cdr: ChangeDetectorRef, private router: Router) { }
@@ -31,7 +41,34 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         
         // Get latest posts (ALL posts, sorted by creation date - newest first)
         this.latestPosts = val
-          .sort((a: any, b: any) => b.data.createdAt.seconds - a.data.createdAt.seconds);
+          .sort((a: any, b: any) => {
+            // Handle different date formats
+            let dateA, dateB;
+            
+            // Check if it's a Firestore Timestamp (has .seconds property)
+            if (a.data.createdAt && a.data.createdAt.seconds) {
+              dateA = new Date(a.data.createdAt.seconds * 1000);
+            } else if (a.data.createdAt) {
+              // Handle string dates or other formats
+              dateA = new Date(a.data.createdAt);
+            } else {
+              // Fallback to other possible date fields
+              dateA = new Date(a.data.dateCreated || a.data.publishedAt || a.data.timestamp || 0);
+            }
+            
+            if (b.data.createdAt && b.data.createdAt.seconds) {
+              dateB = new Date(b.data.createdAt.seconds * 1000);
+            } else if (b.data.createdAt) {
+              dateB = new Date(b.data.createdAt);
+            } else {
+              dateB = new Date(b.data.dateCreated || b.data.publishedAt || b.data.timestamp || 0);
+            }
+            
+            return dateB.getTime() - dateA.getTime();
+          });
+        
+        // Initialize displayed posts with first 24
+        this.updateDisplayedPosts();
         
         // Use setTimeout to avoid change detection issues
         setTimeout(() => {
@@ -94,6 +131,25 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onImageLoad(event: any, post: any) {
     // Image loaded successfully - no logging needed
+  }
+
+  // Pagination methods
+  updateDisplayedPosts() {
+    this.displayedPosts = this.latestPosts.slice(0, this.postsPerPage);
+  }
+
+  loadMorePosts() {
+    const currentLength = this.displayedPosts.length;
+    const newLength = Math.min(currentLength + this.loadMoreIncrement, this.latestPosts.length);
+    this.displayedPosts = this.latestPosts.slice(0, newLength);
+  }
+
+  get hasMorePosts(): boolean {
+    return this.displayedPosts.length < this.latestPosts.length;
+  }
+
+  get remainingPostsCount(): number {
+    return this.latestPosts.length - this.displayedPosts.length;
   }
 
 }
