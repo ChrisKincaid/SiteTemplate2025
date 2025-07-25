@@ -1,7 +1,107 @@
 .featured-section{
-    padding-left: 130px;
-    padding-right: 130px;
-    padding-bottom: 130px;
+    padding-left: 0px;  /* Remove left padding for full width */
+    padding-right: 0px; /* Remove right padding for full width */
+    padding-bottom: 0px; /* Remove bottom padding */
 
-    background-color: var(--primary-color);
+    background-color: transparent; /* Remove green background */
+}
+
+/* Carousel Image Styling */
+.carousel-image-container {
+    position: relative;
+    height: 400px; /* User-friendly height */
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #f0f0f0; /* Light gray background for debugging */
+}
+
+.carousel-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image covers the full area */
+    object-position: center;
+    display: block; /* Ensure image displays as block element */
+    z-index: 1; /* Ensure image is behind overlay */
+}
+
+/* Custom Caption Overlay */
+.carousel-caption-custom {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(2, 100, 103, 0.7); /* Primary color with transparency */
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 70%; /* Reduced from 90% to prevent blocking controls */
+    z-index: 2; /* Ensure overlay is above image */
+    word-wrap: break-word; /* Handle long words */
+    overflow-wrap: break-word; /* Modern browsers */
+    pointer-events: none; /* Allow clicks to pass through to controls */
+}
+
+.carousel-caption-custom h3 {
+    color: white;
+    margin: 0 0 8px 0; /* Add bottom margin for excerpt spacing */
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    line-height: 1.3; /* Better line spacing for multi-line titles */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Reduced to 2 lines to save space */
+    line-clamp: 2; /* Standard property for compatibility */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.carousel-excerpt {
+    color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 300; /* Lighter weight to distinguish from title */
+    font-style: italic; /* Italic to distinguish from title */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit excerpt to 2 lines */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Ensure carousel items have proper structure */
+.carousel-inner .carousel-item {
+    height: 400px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .carousel-image-container {
+        height: 250px;
+    }
+    
+    .carousel-inner .carousel-item {
+        height: 250px;
+    }
+    
+    .carousel-caption-custom {
+        padding: 10px 15px; /* Less padding on mobile */
+        max-width: 80%; /* Narrower on mobile for better control access */
+    }
+    
+    .carousel-caption-custom h3 {
+        font-size: 1.1rem; /* Smaller font on mobile */
+        -webkit-line-clamp: 1; /* Only 1 line on mobile */
+        line-clamp: 1;
+        margin-bottom: 5px;
+    }
+    
+    .carousel-excerpt {
+        font-size: 0.8rem;
+        -webkit-line-clamp: 1; /* Only 1 line on mobile */
+        line-clamp: 1;
+    }
 }

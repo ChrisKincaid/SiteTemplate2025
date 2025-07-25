@@ -1,16 +1,57 @@
 <section class="featured-section">
     <div class="container-fluid">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12 text-center mt-5">
                 <h2 class="text-white">Featured Posts</h2>
                 <p class="text-white">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
+                    Discover our most popular and trending content</p>
             </div>
-        </div> 
+        </div> --> 
 
-        <div class="row">
-            <div class="col-lg-3" *ngFor="let post of featuredPosts.slice(0, 4); trackBy: trackByFn">
-                <app-post-card [postData]="post"></app-post-card>
+        <div class="row justify-content-center" *ngIf="featuredPosts && featuredPosts.length > 0">
+            <div class="col-12">
+                <div id="featuredCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Carousel indicators -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#featuredCarousel" 
+                            *ngFor="let post of featuredPosts; let i = index; trackBy: trackByFn"
+                            [attr.data-slide-to]="i" 
+                            [class.active]="i === 0">
+                        </li>
+                    </ol>
+
+                    <!-- Carousel items -->
+                    <div class="carousel-inner">
+                        <div class="carousel-item" 
+                             *ngFor="let post of featuredPosts; let i = index; trackBy: trackByFn"
+                             [class.active]="i === 0"
+                             (click)="onCarouselItemClick(post)">
+                            <!-- Full width image -->
+                            <div class="carousel-image-container">
+                                <img class="d-block w-100" 
+                                     [src]="post.data.postImg" 
+                                     [alt]="post.data.title"
+                                     (error)="onImageError($event, post)"
+                                     (load)="onImageLoad($event, post)">
+                                <!-- Overlay title -->
+                                <div class="carousel-caption-custom">
+                                    <h3>{{ post.data.title }}</h3>
+                                    <p class="carousel-excerpt">{{ post.data.excerpt }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carousel controls -->
+                    <a class="carousel-control-prev" href="#featuredCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#featuredCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
             </div>
         </div>
 
