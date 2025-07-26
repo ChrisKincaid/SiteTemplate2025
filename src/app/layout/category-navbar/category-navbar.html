@@ -20,21 +20,23 @@
         
         <!-- Hamburger menu button - only show when needed -->
         <div class="hamburger-menu ps-3" [class.d-none]="!showHamburger">
-            <button 
-                class="btn btn-outline-primary hamburger-btn"
-                type="button" 
-                data-toggle="dropdown" 
-                aria-haspopup="true" 
-                aria-expanded="false">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="dropdown-menu hamburger-dropdown">
-                <a class="dropdown-item" 
-                   *ngFor="let category of categoryArray; trackBy: trackByFn" 
-                   (click)="onCategoryClick(category)"
-                   [style.cursor]="'pointer'">
-                   {{ category?.data?.category || 'Loading...' }}
-                </a>
+            <div class="btn-group">
+                <button 
+                    class="btn btn-outline-primary hamburger-btn"
+                    type="button" 
+                    data-toggle="dropdown" 
+                    aria-haspopup="true" 
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-left hamburger-dropdown">
+                    <a class="dropdown-item" 
+                       *ngFor="let category of categoryArray; trackBy: trackByFn" 
+                       (click)="onCategoryClick(category)"
+                       [style.cursor]="'pointer'">
+                       {{ category?.data?.category || 'Loading...' }}
+                    </a>
+                </div>
             </div>
         </div>
         

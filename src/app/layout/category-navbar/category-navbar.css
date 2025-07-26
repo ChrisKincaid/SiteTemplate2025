@@ -1,10 +1,12 @@
 nav{
     top: 100px; /* Position below the header */
-    min-height: 42px; /* Reduced height by ~15% (was 50px, now 42px) */
+    min-height: 42px !important; /* Fixed height - prevent changes */
+    max-height: 42px !important; /* Lock the height */
     background-color: var(--secondary-color); /* Match header/site logo background */
     z-index: 1000; /* Ensure it stays above other content */
     display: flex !important; /* Always show, never collapse */
     padding: 0.35rem 0; /* Reduced padding by ~15% (was 0.5rem, now 0.35rem) */
+    overflow: visible !important; /* Allow dropdowns to show outside navbar */
 }
 
 /* Single navbar-nav container styling */
@@ -13,6 +15,7 @@ nav{
     align-items: center !important; /* Vertically center items */
     width: 100% !important; /* Take full width */
     flex-wrap: nowrap !important; /* Prevent wrapping */
+    height: 42px !important; /* Lock container height */
 }
 
 /* Categories section styling */
@@ -25,45 +28,81 @@ nav{
 /* Hamburger menu styling */
 .hamburger-menu {
     position: relative;
+    display: inline-block;
+    height: 100%; /* Match parent container height */
+}
+
+/* Hamburger btn-group styling to match profile button */
+.hamburger-menu .btn-group {
+    height: 32px !important; /* Smaller than navbar to fit inside */
+    display: inline-flex !important;
+    align-items: center !important;
 }
 
 .hamburger-btn {
     border: 2px solid var(--primary-color) !important;
     color: var(--primary-color) !important;
     background-color: transparent !important;
-    padding: 6px 12px !important;
-    height: 32px !important;
-    width: 40px !important;
-    display: flex !important;
+    padding: 4px 8px !important; /* Reduced padding */
+    height: 32px !important; /* Smaller height to fit within navbar */
+    width: 32px !important; /* Make it square and smaller */
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     transition: all 0.3s ease;
+    margin: 0 !important;
+    border-radius: 4px !important;
+    box-sizing: border-box !important;
+    font-size: 12px !important; /* Smaller icon */
 }
 
 .hamburger-btn:hover {
     background-color: var(--primary-color) !important;
     color: white !important;
+    border-color: var(--primary-color) !important;
+}
+
+.hamburger-btn:focus {
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .hamburger-dropdown {
     min-width: 200px;
     max-height: 300px;
     overflow-y: auto;
-    border: 1px solid var(--primary-color);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border: 1px solid #dee2e6;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    background-color: white;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    z-index: 1050 !important;
+    margin-top: 2px !important;
 }
 
 .hamburger-dropdown .dropdown-item {
     color: var(--primary-color);
     padding: 8px 16px;
-    font-size: 14px;
+    font-size: 12px;
     text-transform: uppercase;
     transition: all 0.2s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    display: block;
+    text-decoration: none;
 }
 
 .hamburger-dropdown .dropdown-item:hover {
     background-color: var(--secondary-color);
     color: var(--primary-color);
+}
+
+.hamburger-dropdown .dropdown-item:active {
+    background-color: var(--primary-color);
+    color: white;
 }
 
 /* Profile button container - keep it compact and right-aligned */
