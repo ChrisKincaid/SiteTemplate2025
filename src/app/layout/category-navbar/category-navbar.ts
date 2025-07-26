@@ -2,10 +2,11 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Categories } from '../../services/categories';
+import { UserAuthComponent } from '../../components/user-auth/user-auth.component';
 
 @Component({
   selector: 'app-category-navbar',
-  imports: [CommonModule],
+  imports: [CommonModule, UserAuthComponent],
   templateUrl: './category-navbar.html',
   styleUrl: './category-navbar.css'
 })

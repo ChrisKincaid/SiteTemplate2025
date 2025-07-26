@@ -1,18 +1,80 @@
 nav{
     top: 100px; /* Position below the header */
-    min-height: 50px; /* Minimum height, can grow as needed */
-    background-color: var(--navbar-footer-color);
+    min-height: 42px; /* Reduced height by ~15% (was 50px, now 42px) */
+    background-color: var(--secondary-color); /* Match header/site logo background */
     z-index: 1000; /* Ensure it stays above other content */
     display: flex !important; /* Always show, never collapse */
-    padding: 0.5rem 0; /* Add some vertical padding */
+    padding: 0.35rem 0; /* Reduced padding by ~15% (was 0.5rem, now 0.35rem) */
 }
 
+/* Single navbar-nav container styling */
 .navbar-nav {
-    flex-direction: row !important; /* Keep horizontal even on mobile */
-    flex-wrap: wrap; /* Allow wrapping on very small screens */
-    justify-content: center; /* Center the items */
-    align-items: center; /* Vertically center items */
-    width: 100%; /* Take full width */
+    flex-direction: row !important; /* Keep horizontal layout */
+    align-items: center !important; /* Vertically center items */
+    width: 100% !important; /* Take full width */
+    flex-wrap: nowrap !important; /* Prevent wrapping */
+}
+
+/* Categories section styling */
+.navbar-nav .d-flex:first-child {
+    flex-wrap: wrap; /* Allow category wrapping if needed */
+    align-items: center;
+}
+
+/* Profile button container - keep it compact and right-aligned */
+.navbar-nav .ms-auto {
+    flex-shrink: 0 !important; /* Don't shrink */
+    margin-left: auto !important; /* Push to the right */
+    padding-right: 0 !important; /* Remove any right padding */
+    margin-right: 0 !important; /* Remove any right margin */
+}
+
+/* Container responsive behavior */
+.container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important; /* Zero padding to reach edges */
+}
+
+/* Categories section with left padding */
+.navbar-nav .d-flex.ps-3 {
+    padding-left: 1rem !important; /* Add left spacing for categories */
+}
+
+/* Profile button container - absolutely no right spacing */
+.navbar-nav .pe-0 {
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    nav {
+        min-height: 38px; /* Further reduce on mobile */
+        padding: 0.25rem 0; /* Tighter padding on mobile */
+    }
+    
+    .navbar-nav .d-flex:first-child {
+        flex-wrap: wrap; /* Allow categories to wrap on small screens */
+    }
+    
+    .navbar-nav .ms-auto {
+        position: absolute !important; /* Position profile button absolutely on mobile */
+        right: 0 !important; /* Touch the right edge */
+        top: 50% !important;
+        transform: translateY(-50%) !important; /* Center vertically */
+        padding-right: 0 !important; /* Zero padding on mobile too */
+        margin-right: 0 !important; /* Zero margin on mobile too */
+    }
+    
+    .container-fluid {
+        padding-right: 0 !important; /* Ensure container doesn't add spacing on mobile */
+        padding-left: 0 !important;
+    }
+    
+    .navbar-nav .pe-0 {
+        padding-right: 0 !important;
+        margin-right: 0 !important;
+    }
 }
 
 .nav-link{

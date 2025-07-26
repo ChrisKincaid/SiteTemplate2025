@@ -158,7 +158,7 @@ import { Subscription } from 'rxjs';
         data-toggle="dropdown" 
         aria-haspopup="true" 
         aria-expanded="false"
-        style="display: inline-block; white-space: nowrap; overflow: hidden; max-width: 200px; min-width: 120px; text-align: left; padding-left: 12px; padding-right: 12px;">
+        style="display: inline-block; white-space: nowrap; overflow: hidden; max-width: 200px; min-width: 120px; text-align: left;">
         <img 
           [src]="getUserImageSrc()" 
           class="rounded-circle profile-img"
@@ -209,6 +209,13 @@ import { Subscription } from 'rxjs';
       box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     }
     
+    /* Ensure btn-group doesn't add extra height */
+    .btn-group {
+      height: 42px !important; /* Match navbar height */
+      display: inline-flex !important;
+      align-items: center !important;
+    }
+    
     
     /* AGGRESSIVE FIX for profile button horizontal layout */
     .user-profile-btn {
@@ -218,9 +225,13 @@ import { Subscription } from 'rxjs';
       white-space: nowrap !important;
       min-width: 120px !important;
       max-width: 200px !important;
+      height: 42px !important; /* Match navbar min-height exactly */
       gap: 8px !important;
       text-align: left !important;
       justify-content: flex-start !important;
+      margin: 0 !important; /* Remove any margin that could affect height */
+      padding: 0 0 0 12px !important; /* Zero right padding, left padding only */
+      border: none !important; /* Remove border that could add height */
     }
     
     /* Triple override for Bootstrap conflicts */
@@ -231,6 +242,12 @@ import { Subscription } from 'rxjs';
       flex-direction: row !important;
       align-items: center !important;
       flex-wrap: nowrap !important;
+      height: 42px !important; /* Match navbar height exactly */
+      line-height: 1 !important; /* Prevent line-height from affecting height */
+      padding: 0 0 0 12px !important; /* Zero right padding, left padding only */
+      margin: 0 !important; /* Remove Bootstrap margins */
+      border: none !important; /* Remove borders that add height */
+      box-sizing: border-box !important; /* Include padding in height calculation */
     }
     
     .profile-img {

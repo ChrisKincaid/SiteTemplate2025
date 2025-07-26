@@ -1,3 +1,25 @@
+/* Single post page specific spacing from navbar */
+.single-post-container {
+    margin-top: 30px !important; /* Add space between navbar and post content */
+    padding-top: 20px !important; /* Extra padding for additional spacing */
+}
+
+/* Container spacing from navbar - fallback */
+.container {
+    margin-top: 20px !important; /* Add space between navbar and post content */
+    padding-top: 20px !important; /* Extra padding for additional spacing */
+}
+
+/* Card spacing from top */
+.card {
+    margin-top: 20px !important; /* Additional spacing for the card itself */
+}
+
+/* Image spacing from top */
+.card-img-top {
+    margin-top: 0 !important; /* Ensure no negative margins on image */
+}
+
 /* Subcategory Tags Styling */
 .subcategory-tag {
     display: inline-block;
