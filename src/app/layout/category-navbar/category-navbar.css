@@ -16,9 +16,54 @@ nav{
 }
 
 /* Categories section styling */
-.navbar-nav .d-flex:first-child {
+.categories-container {
     flex-wrap: wrap; /* Allow category wrapping if needed */
     align-items: center;
+    transition: all 0.3s ease; /* Smooth transition when hiding/showing */
+}
+
+/* Hamburger menu styling */
+.hamburger-menu {
+    position: relative;
+}
+
+.hamburger-btn {
+    border: 2px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    background-color: transparent !important;
+    padding: 6px 12px !important;
+    height: 32px !important;
+    width: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease;
+}
+
+.hamburger-btn:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+.hamburger-dropdown {
+    min-width: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.hamburger-dropdown .dropdown-item {
+    color: var(--primary-color);
+    padding: 8px 16px;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+
+.hamburger-dropdown .dropdown-item:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
 }
 
 /* Profile button container - keep it compact and right-aligned */
@@ -53,8 +98,12 @@ nav{
         padding: 0.25rem 0; /* Tighter padding on mobile */
     }
     
-    .navbar-nav .d-flex:first-child {
+    .categories-container {
         flex-wrap: wrap; /* Allow categories to wrap on small screens */
+    }
+    
+    .hamburger-menu {
+        padding-left: 1rem !important; /* Ensure proper spacing on mobile */
     }
     
     .navbar-nav .ms-auto {
@@ -74,6 +123,16 @@ nav{
     .navbar-nav .pe-0 {
         padding-right: 0 !important;
         margin-right: 0 !important;
+    }
+    
+    /* Force hamburger on very small screens */
+    @media (max-width: 576px) {
+        .categories-container {
+            display: none !important; /* Force hamburger on very small screens */
+        }
+        .hamburger-menu {
+            display: block !important;
+        }
     }
 }
 
