@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from './layout/header/header';
 import { CategoryNavbar } from './layout/category-navbar/category-navbar';
 import { Footer } from './layout/footer/footer';
+import { SiteThemeService } from './services/site-theme.service';
 
 @Component({
   selector: 'app-root',
@@ -17,4 +18,5 @@ import { Footer } from './layout/footer/footer';
 })
 export class App {
   protected readonly title = signal('SiteTemplate2025');
+  private siteThemeService = inject(SiteThemeService); // Initialize theme service
 }

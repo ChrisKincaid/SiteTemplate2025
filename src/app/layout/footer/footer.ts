@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { SiteImagesService } from '../../services/site-images.service';
 import { SiteTextService, SiteText } from '../../services/site-text.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-footer',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './footer.html',
   styleUrl: './footer.css'
 })
