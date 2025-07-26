@@ -19,6 +19,7 @@ body{
     border-radius: 20px;
     background-color: var(--secondary-color);
     color: var(--primary-color);
+    opacity: 0.8; /* Make background semi-transparent */
 }
 
 .nav-links {

@@ -29,11 +29,49 @@ nav.navbar {
     height: 42px !important; /* Lock container height */
 }
 
+/* Home icon styling */
+.home-icon-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    padding-left: 15px;
+}
+
+.home-icon-container-mobile {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.home-icon {
+    color: white !important;
+    font-size: 1.4em !important; /* Make it bigger and more visible */
+    padding: 8px 12px !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    display: inline-block !important;
+    line-height: 1 !important;
+}
+
+.home-icon:hover {
+    color: var(--primary-color) !important;
+    background-color: rgba(255,255,255,0.2) !important;
+    text-decoration: none !important;
+    transform: scale(1.1);
+}
+
 /* Categories section styling */
 .categories-container {
     flex-wrap: wrap; /* Allow category wrapping if needed */
     align-items: center;
     transition: all 0.3s ease; /* Smooth transition when hiding/showing */
+    margin-left: 70px; /* Make space for home icon */
+    padding-left: 15px;
 }
 
 /* Hamburger menu styling */

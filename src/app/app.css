@@ -2,3 +2,18 @@
 margin-top: 150px;
 min-height: 35vh;
 }
+
+/* Copyright section at very bottom of page */
+.copyright-section {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+.copyright-section p {
+    font-size: 0.85em; /* Slightly bigger text */
+    color: #666;
+    margin: 0;
+}
