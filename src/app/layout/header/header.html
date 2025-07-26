@@ -1,6 +1,19 @@
-<header class="navbar navbar-expand-lg fixed-top bg-light">
-    <div class="container">
-        <!-- Logo -->
-        <a href="#" class="site-logo navbar-brand">Site Logo for Header</a>
+<header class="navbar navbar-expand-lg bg-light">
+    <!-- Header image displayed at full height -->
+    <div *ngIf="activeHeaderImage" class="header-image-container">
+        <img [src]="activeHeaderImage.url" alt="Site Header" class="header-image-full">
+        <!-- Overlay content on top of image -->
+        <div class="header-content-overlay">
+            <div class="container">
+                <!-- Site logo displayed in front of the header image -->
+                <a href="#" class="site-logo">Site Logo for Header</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Default header when no image is active -->
+    <div *ngIf="!activeHeaderImage" class="container">
+        <!-- Site logo displayed in front of the header image -->
+        <a href="#" class="site-logo">Site Logo for Header</a>
     </div>
 </header>

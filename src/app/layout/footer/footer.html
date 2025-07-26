@@ -1,9 +1,40 @@
 <footer>
-
-    <div class="container">
+    <!-- Footer image displayed at full height -->
+    <div *ngIf="activeFooterImage" class="footer-image-container">
+        <img [src]="activeFooterImage.url" alt="Site Footer" class="footer-image-full">
+        <!-- Overlay content on top of image -->
+        <div class="footer-content-overlay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <div class="site-logo">Site Logo for Footer Goes here</div>
+                        <div>
+                            <ul class="nav justify-content-center">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">About</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Terms and Conditions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <p class="mb-2 mt-2">© 2025 Byte Owl. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Default footer when no image is active -->
+    <div *ngIf="!activeFooterImage" class="container">
         <div class="row">
             <div class="col-md-12 text-center">
-                
                 <div class="site-logo">Site Logo for Footer Goes here</div>
                 <div>
                     <ul class="nav justify-content-center">
@@ -24,7 +55,5 @@
                 <p class="mb-2 mt-2">© 2025 Byte Owl. All rights reserved.</p>
             </div>
         </div>
-    
     </div>
-
 </footer>

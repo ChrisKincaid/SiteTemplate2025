@@ -1,12 +1,23 @@
 nav{
-    top: 100px; /* Position below the header */
+    position: sticky !important; /* Change from fixed to sticky */
+    top: 0 !important; /* Stick to top when scrolling */
     min-height: 42px !important; /* Fixed height - prevent changes */
     max-height: 42px !important; /* Lock the height */
     background-color: var(--secondary-color); /* Match header/site logo background */
-    z-index: 1000; /* Ensure it stays above other content */
+    z-index: 1040 !important; /* Ensure it stays above header content */
     display: flex !important; /* Always show, never collapse */
-    padding: 0.35rem 0; /* Reduced padding by ~15% (was 0.5rem, now 0.35rem) */
+    padding: 0 !important; /* REMOVE ALL PADDING */
+    margin: 0 !important; /* REMOVE ALL MARGIN */
     overflow: visible !important; /* Allow dropdowns to show outside navbar */
+}
+
+/* Force Bootstrap navbar classes to not add spacing */
+nav.navbar {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
 }
 
 /* Single navbar-nav container styling */
@@ -111,6 +122,67 @@ nav{
     margin-left: auto !important; /* Push to the right */
     padding-right: 0 !important; /* Remove any right padding */
     margin-right: 0 !important; /* Remove any right margin */
+    height: 42px !important; /* Match navbar height exactly */
+    display: flex !important;
+    align-items: center !important; /* Center vertically */
+    max-height: 42px !important; /* Prevent overflow */
+    margin-top: 0 !important; /* Force no top margin */
+    margin-bottom: 0 !important; /* Force no bottom margin */
+    padding-top: 0 !important; /* Force no top padding */
+    padding-bottom: 0 !important; /* Force no bottom padding */
+    box-sizing: border-box !important; /* Include borders in height */
+}
+
+/* Force profile button component to match navbar height */
+.navbar-nav .ms-auto app-user-auth {
+    height: 42px !important; /* Match navbar height exactly */
+    max-height: 42px !important; /* Prevent overflow */
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important; /* Remove any margins */
+    padding: 0 !important; /* Remove any padding */
+    vertical-align: top !important; /* Force top alignment */
+    box-sizing: border-box !important; /* Include borders in height */
+}
+
+/* Force all button groups inside profile to proper height */
+.navbar-nav .ms-auto app-user-auth .btn-group {
+    height: 42px !important;
+    max-height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important; /* Remove any margins */
+    padding: 0 !important; /* Remove any padding */
+    vertical-align: top !important; /* Force top alignment */
+    box-sizing: border-box !important; /* Include borders in height */
+}
+
+/* Force all buttons inside profile to proper height and MATCH NAVBAR BACKGROUND */
+.navbar-nav .ms-auto app-user-auth .btn {
+    height: 42px !important;
+    max-height: 42px !important;
+    line-height: 1 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border: none !important;
+    box-sizing: border-box !important;
+    background-color: var(--secondary-color) !important; /* MATCH NAVBAR BACKGROUND */
+    color: var(--primary-color) !important; /* Keep text color consistent */
+}
+
+/* Force button group to match navbar background */
+.navbar-nav .ms-auto app-user-auth .btn-group {
+    height: 42px !important;
+    max-height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+    background-color: var(--secondary-color) !important; /* MATCH NAVBAR BACKGROUND */
+}
+
+/* Force hover states to be subtle but visible */
+.navbar-nav .ms-auto app-user-auth .btn:hover {
+    background-color: var(--secondary-color) !important; /* Keep same background */
+    opacity: 0.8 !important; /* Subtle hover effect */
 }
 
 /* Container responsive behavior */

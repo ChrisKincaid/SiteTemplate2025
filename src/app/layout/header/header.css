@@ -1,9 +1,68 @@
 header {
-    height: 100px;
+    position: relative;
+    min-height: 100px; /* Minimum height when no image */
+    z-index: 1030; /* Ensure header is above other content but below navbar */
+}
+
+/* Header Image Container - shows full image height */
+.header-image-container {
+    position: relative;
+    width: 100%;
+}
+
+.header-image-full {
+    width: 100%;
+    height: auto; /* Maintains natural aspect ratio */
+    display: block;
+    opacity: 0.9;
+}
+
+/* Content overlay positioned on top of image */
+.header-content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center; /* Center content vertically */
+    z-index: 2;
+}
+
+.header-content-overlay .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px;
 }
 
 .site-logo {
     font-size: 1.5rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* Add text shadow for readability */
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Default header without image */
+header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    min-height: 70px;
+}
+
+header .container .site-logo {
+    color: #333; /* Dark color for default header */
+    text-shadow: none;
+}
+
+/* Ensure category navbar stays above header content */
+.category-navbar {
+    position: relative;
+    z-index: 1040; /* Higher than header */
 }
 
 .gap-2 {
