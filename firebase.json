@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "sitetemplate2025-blog",
+    "public": "dist/SiteTemplate2025/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

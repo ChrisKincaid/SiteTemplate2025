@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SiteImagesService } from '../../services/site-images.service';
 import { SiteTextService, SiteText } from '../../services/site-text.service';
@@ -18,12 +18,14 @@ export class Header implements OnInit, OnDestroy {
   private siteTextSubscription?: Subscription;
   private siteImagesService = inject(SiteImagesService);
   private siteTextService = inject(SiteTextService);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     // Subscribe to header image changes
     this.headerImageSubscription = this.siteImagesService.headerImage$.subscribe(
       (image) => {
         this.activeHeaderImage = image;
+        this.cdr.detectChanges(); // Manually trigger change detection
       }
     );
 

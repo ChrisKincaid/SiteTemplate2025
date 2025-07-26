@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SiteImagesService } from '../../services/site-images.service';
@@ -19,12 +19,14 @@ export class Footer implements OnInit, OnDestroy {
   private siteTextSubscription?: Subscription;
   private siteImagesService = inject(SiteImagesService);
   private siteTextService = inject(SiteTextService);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     // Subscribe to footer image changes
     this.footerImageSubscription = this.siteImagesService.footerImage$.subscribe(
       (image) => {
         this.activeFooterImage = image;
+        this.cdr.detectChanges(); // Manually trigger change detection
       }
     );
 
