@@ -52,10 +52,8 @@ export class SiteImagesService {
         
         const imageData = images[0];
         this.headerImageSubject.next(imageData);
-        console.log('Header image updated:', imageData);
       } else {
         this.headerImageSubject.next(null);
-        console.log('Header image updated: null');
       }
     }, (error) => {
       console.error('Error fetching header images:', error);
@@ -86,10 +84,8 @@ export class SiteImagesService {
         
         const imageData = images[0];
         this.footerImageSubject.next(imageData);
-        console.log('Footer image updated:', imageData);
       } else {
         this.footerImageSubject.next(null);
-        console.log('Footer image updated: null');
       }
     }, (error) => {
       console.error('Error fetching footer images:', error);

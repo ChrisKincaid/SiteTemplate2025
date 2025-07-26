@@ -39,13 +39,10 @@ export class SinglePost implements OnInit, OnDestroy {
   }
 
   private loadPostData(postId: string) {
-    console.log('SinglePost loading data for postId:', postId);
     this.subscription = this.postService.loadData().subscribe({
       next: (posts: any[]) => {
-        console.log('Available posts:', posts.map(p => ({ id: p.id, title: p.data.title })));
         // Find the current post by ID
         this.currentPost = posts.find(post => post.id === postId);
-        console.log('Found currentPost:', this.currentPost ? { id: this.currentPost.id, title: this.currentPost.data.title } : 'NOT FOUND');
         
         // Increment view count for this post (only once per session)
         if (this.currentPost && !this.viewedPosts.has(this.currentPost.id)) {

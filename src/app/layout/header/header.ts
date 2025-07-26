@@ -24,7 +24,6 @@ export class Header implements OnInit, OnDestroy {
     this.headerImageSubscription = this.siteImagesService.headerImage$.subscribe(
       (image) => {
         this.activeHeaderImage = image;
-        console.log('Header image updated:', image);
       }
     );
 

@@ -25,7 +25,6 @@ export class Footer implements OnInit, OnDestroy {
     this.footerImageSubscription = this.siteImagesService.footerImage$.subscribe(
       (image) => {
         this.activeFooterImage = image;
-        console.log('Footer image updated:', image);
       }
     );
 
