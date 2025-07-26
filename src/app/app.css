@@ -1,5 +1,5 @@
 .app-body{
-margin-top: 150px;
+margin-top: 70px; /* Reduced from 150px for tighter spacing */
 min-height: 35vh;
 }
 
