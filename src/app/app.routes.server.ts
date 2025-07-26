@@ -1,7 +1,7 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 
-// Define only static routes for prerendering - exclude dynamic routes with parameters
 export const serverRoutes: ServerRoute[] = [
+  // Static routes that can be prerendered
   {
     path: '',
     renderMode: RenderMode.Prerender
@@ -16,6 +16,11 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'contact',
+    renderMode: RenderMode.Prerender
+  },
+  // Dynamic routes - let them render on demand
+  {
+    path: '**',
     renderMode: RenderMode.Prerender
   }
 ];
