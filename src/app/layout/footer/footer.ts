@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SiteImagesService } from '../../services/site-images.service';
+import { SiteTextService, SiteText } from '../../services/site-text.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,9 +12,12 @@ import { Subscription } from 'rxjs';
 })
 export class Footer implements OnInit, OnDestroy {
   activeFooterImage: any = null;
+  siteText: SiteText = { headerText: 'Main Title', footerText: 'Footer Title', lastUpdated: new Date() };
+  
   private footerImageSubscription?: Subscription;
-
-  constructor(private siteImagesService: SiteImagesService) {}
+  private siteTextSubscription?: Subscription;
+  private siteImagesService = inject(SiteImagesService);
+  private siteTextService = inject(SiteTextService);
 
   ngOnInit() {
     // Subscribe to footer image changes
@@ -23,11 +27,22 @@ export class Footer implements OnInit, OnDestroy {
         console.log('Footer image updated:', image);
       }
     );
+
+    // Subscribe to site text changes
+    this.siteTextSubscription = this.siteTextService.siteText$.subscribe(
+      (siteText) => {
+        this.siteText = siteText;
+      }
+    );
   }
 
   ngOnDestroy() {
     if (this.footerImageSubscription) {
       this.footerImageSubscription.unsubscribe();
+    }
+    
+    if (this.siteTextSubscription) {
+      this.siteTextSubscription.unsubscribe();
     }
   }
 }
