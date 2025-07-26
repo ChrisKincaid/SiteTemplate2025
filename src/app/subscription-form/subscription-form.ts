@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SubscriptionService } from '../services/subscription';
@@ -16,6 +16,8 @@ export class SubscriptionForm {
   isSubmitting: boolean = false;
   message: string = '';
   messageType: 'success' | 'error' | '' = '';
+
+  @Output() subscriptionSuccess = new EventEmitter<void>();
 
   constructor(
     private subscriptionService: SubscriptionService,
@@ -54,6 +56,7 @@ export class SubscriptionForm {
       if (result.success) {
         this.showMessage(result.message, 'success');
         this.resetForm();
+        this.subscriptionSuccess.emit(); // Emit success event
       } else {
         this.showMessage(result.message, 'error');
       }

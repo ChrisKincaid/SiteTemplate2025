@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { SubscriptionService } from '../../services/subscription';
 import { User } from '@angular/fire/auth';
 import { Subscription } from 'rxjs';
 
@@ -25,14 +26,14 @@ import { Subscription } from 'rxjs';
           <li class="nav-item">
             <a class="nav-link" 
                [class.active]="activeTab === 'signin'" 
-               (click)="activeTab = 'signin'">
+               (click)="switchTab('signin', $event)">
               Sign In
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" 
                [class.active]="activeTab === 'signup'" 
-               (click)="activeTab = 'signup'">
+               (click)="switchTab('signup', $event)">
               Sign Up
             </a>
           </li>
@@ -174,6 +175,13 @@ import { Subscription } from 'rxjs';
           <small class="text-muted">{{ currentUser.email }}</small>
         </div>
         <div class="dropdown-divider"></div>
+        <button class="dropdown-item" (click)="toggleSubscription()" [disabled]="isSubscriptionLoading">
+          <i class="fas fa-envelope me-2"></i>
+          <span *ngIf="!isSubscriptionLoading">{{ isUserSubscribed ? 'Unsubscribe from Newsletter' : 'Subscribe to Newsletter' }}</span>
+          <span *ngIf="isSubscriptionLoading">
+            <i class="fas fa-spinner fa-spin me-1"></i>Updating...
+          </span>
+        </button>
         <button class="dropdown-item" (click)="signOut()">
           <i class="fas fa-sign-out-alt me-2"></i>Sign Out
         </button>
@@ -184,6 +192,7 @@ import { Subscription } from 'rxjs';
     .nav-tabs .nav-link {
       font-size: 12px;
       padding: 5px 10px;
+      cursor: pointer;
     }
     .gap-1 {
       gap: 0.25rem;
@@ -265,6 +274,8 @@ export class UserAuthComponent implements OnInit, OnDestroy {
   isLoading = false;
   errorMessage = '';
   showProfileImage = true;
+  isUserSubscribed = false;
+  isSubscriptionLoading = false;
   
   signInData = {
     email: '',
@@ -281,13 +292,22 @@ export class UserAuthComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
+    private subscriptionService: SubscriptionService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.authSubscription = this.authService.user$.subscribe(user => {
+    this.authSubscription = this.authService.user$.subscribe(async user => {
       this.currentUser = user;
       this.showProfileImage = true; // Reset image visibility for new user
+      
+      // Check subscription status when user changes
+      if (user?.email) {
+        await this.checkSubscriptionStatus();
+      } else {
+        this.isUserSubscribed = false;
+      }
+      
       this.cdr.detectChanges();
     });
   }
@@ -358,6 +378,51 @@ export class UserAuthComponent implements OnInit, OnDestroy {
 
   async signOut() {
     await this.authService.signOut();
+  }
+
+  switchTab(tab: 'signin' | 'signup', event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.activeTab = tab;
+  }
+
+  async checkSubscriptionStatus() {
+    if (!this.currentUser?.email) return;
+    
+    try {
+      this.isUserSubscribed = await this.subscriptionService.isEmailSubscribed(this.currentUser.email);
+    } catch (error) {
+      console.warn('Failed to check subscription status:', error);
+      this.isUserSubscribed = false;
+    }
+  }
+
+  async toggleSubscription() {
+    if (!this.currentUser?.email) return;
+    
+    this.isSubscriptionLoading = true;
+    
+    try {
+      if (this.isUserSubscribed) {
+        // Unsubscribe the user
+        const result = await this.subscriptionService.unsubscribe(this.currentUser.email);
+        if (result.success) {
+          this.isUserSubscribed = false;
+        }
+      } else {
+        // Subscribe the user
+        const userName = this.currentUser.displayName || this.currentUser.email?.split('@')[0] || 'User';
+        const result = await this.subscriptionService.addSubscription(userName, this.currentUser.email);
+        if (result.success) {
+          this.isUserSubscribed = true;
+        }
+      }
+    } catch (error) {
+      console.error('Subscription toggle failed:', error);
+      // Show error feedback if needed
+    } finally {
+      this.isSubscriptionLoading = false;
+    }
   }
 
   onImageError(event: any): void {

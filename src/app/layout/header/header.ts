@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { SubscriptionForm } from '../../subscription-form/subscription-form';
+import { CommonModule } from '@angular/common';
 import { UserAuthComponent } from '../../components/user-auth/user-auth.component';
 
 @Component({
   selector: 'app-header',
-  imports: [SubscriptionForm, UserAuthComponent],
+  imports: [CommonModule, UserAuthComponent],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
 export class Header {
-
 }
