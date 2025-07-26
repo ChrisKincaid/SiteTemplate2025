@@ -2,12 +2,21 @@ header {
     position: relative;
     min-height: 100px; /* Minimum height when no image */
     z-index: 1030; /* Ensure header is above other content but below navbar */
+    padding: 0 !important; /* Remove any padding - override Bootstrap */
+    margin: 0; /* Remove any margin */
+}
+
+/* Override Bootstrap navbar classes */
+header.navbar {
+    padding: 0 !important;
 }
 
 /* Header Image Container - shows full image height */
 .header-image-container {
     position: relative;
     width: 100%;
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
 }
 
 .header-image-full {
@@ -15,6 +24,8 @@ header {
     height: auto; /* Maintains natural aspect ratio */
     display: block;
     opacity: 0.9;
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
 }
 
 /* Content overlay positioned on top of image */
