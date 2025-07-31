@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Categories } from '../../services/categories';
 import { UserAuthComponent } from '../../components/user-auth/user-auth.component';
+import { SearchComponent } from '../../components/search/search.component';
 
 @Component({
   selector: 'app-category-navbar',
-  imports: [CommonModule, UserAuthComponent],
+  imports: [CommonModule, UserAuthComponent, SearchComponent],
   templateUrl: './category-navbar.html',
   styleUrl: './category-navbar.css'
 })

@@ -1,0 +1,143 @@
+<div class="search-container" (clickOutside)="onClickOutside($event)">
+  <!-- Search Icon/Button -->
+  <div class="search-icon" (click)="toggleSearch()" [class.active]="isExpanded">
+    <i class="fas fa-search"></i>
+  </div>
+
+  <!-- Search Dropdown -->
+  <div class="search-dropdown" [class.open]="isDropdownOpen">
+    <!-- Tab Headers -->
+    <div class="tab-headers">
+      <button 
+        class="tab-header"
+        [class.active]="activeTab === 'search'"
+        (click)="switchTab('search')">
+        Search
+      </button>
+      <button 
+        class="tab-header"
+        [class.active]="activeTab === 'advanced'"
+        (click)="switchTab('advanced')">
+        Advanced Search
+      </button>
+    </div>
+
+    <!-- Basic Search Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'search'">
+      <div class="search-form">
+        <div class="input-group">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="Enter search terms..."
+            class="form-control">
+          <button 
+            class="btn btn-primary"
+            (click)="performBasicSearch()"
+            [disabled]="!searchTerm.trim()">
+            <i class="fas fa-search"></i> Search
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced Search Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'advanced'">
+      <form class="advanced-search-form" (ngSubmit)="performAdvancedSearch()">
+        <!-- Search Term -->
+        <div class="form-group">
+          <label for="advSearchTerm">Search Terms</label>
+          <input
+            type="text"
+            id="advSearchTerm"
+            [(ngModel)]="searchTerm"
+            name="searchTerm"
+            placeholder="Enter search terms..."
+            class="form-control"
+            required>
+        </div>
+
+        <!-- Author Filter -->
+        <div class="form-group">
+          <label for="authorFilter">Author</label>
+          <select
+            id="authorFilter"
+            [(ngModel)]="author"
+            name="author"
+            class="form-control">
+            <option value="">All Authors</option>
+            <option *ngFor="let authorName of authors" [value]="authorName">
+              {{ authorName }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Subcategory Filter -->
+        <div class="form-group">
+          <label for="subcategoryFilter">Subcategory</label>
+          <select
+            id="subcategoryFilter"
+            [(ngModel)]="subcategory"
+            name="subcategory"
+            class="form-control">
+            <option value="">All Subcategories</option>
+            <option *ngFor="let subcategoryName of subcategories" [value]="subcategoryName">
+              {{ subcategoryName }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Date Range -->
+        <div class="form-group">
+          <label>Date Range</label>
+          <div class="date-range">
+            <input
+              type="date"
+              [(ngModel)]="dateRangeStart"
+              name="dateStart"
+              class="form-control"
+              placeholder="From">
+            <span class="date-separator">to</span>
+            <input
+              type="date"
+              [(ngModel)]="dateRangeEnd"
+              name="dateEnd"
+              class="form-control"
+              placeholder="To">
+          </div>
+        </div>
+
+        <!-- Sort Options -->
+        <div class="form-group">
+          <label for="sortBy">Sort By</label>
+          <select
+            id="sortBy"
+            [(ngModel)]="sortBy"
+            name="sortBy"
+            class="form-control">
+            <option value="relevance">Relevance</option>
+            <option value="mostPopular">Most Popular</option>
+            <option value="newest">Newest to Oldest</option>
+            <option value="oldest">Oldest to Newest</option>
+          </select>
+        </div>
+
+        <!-- Search Button -->
+        <div class="form-actions">
+          <button 
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!canPerformAdvancedSearch">
+            <i class="fas fa-search"></i> Advanced Search
+          </button>
+          <button 
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeDropdown()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

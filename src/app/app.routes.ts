@@ -10,6 +10,7 @@ export const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'category/:id', component: SingleCategory},
     {path: 'category/subcategory', component: SingleCategory}, // Handle subcategory navigation
+    {path: 'search', component: SingleCategory}, // Handle search results
     {path: 'post/:id', component: SinglePost},
 
     {path: 'about', component: AboutUs},

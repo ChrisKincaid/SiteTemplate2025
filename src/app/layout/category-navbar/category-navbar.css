@@ -293,3 +293,18 @@ nav.navbar {
     margin: 0.1rem; /* Small margin between items */
     white-space: nowrap; /* Prevent text wrapping within individual links */
 }
+
+/* Search container styling in navbar */
+.search-container-nav {
+    display: flex;
+    align-items: center;
+    height: 42px;
+    margin-right: 10px; /* Small gap between search and profile */
+    position: relative;
+    z-index: 1050; /* Ensure search dropdown appears above everything */
+}
+
+/* Make sure search dropdown appears correctly in navbar */
+.search-container-nav app-search {
+    position: relative;
+}

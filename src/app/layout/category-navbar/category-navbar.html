@@ -52,8 +52,12 @@
             </div>
         </div>
         
-        <!-- Profile button on the far right -->
-        <div class="ms-auto pe-0 profile-container">
+        <!-- Profile section with search and profile button -->
+        <div class="ms-auto pe-0 profile-container d-flex align-items-center">
+            <!-- Search component - positioned right next to profile button -->
+            <div class="search-container-nav">
+                <app-search></app-search>
+            </div>
             <app-user-auth></app-user-auth>
         </div>
     </div>
