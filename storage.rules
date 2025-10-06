@@ -1,0 +1,48 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Public read access to generated favicon files
+    match /public/favicon/{allPaths=**} {
+      allow read: if true;
+    }
+
+    // Admin-only access to favicon uploads and site images
+    match /admin/favicon/{allPaths=**} {
+      allow read, write: if request.auth != null 
+        && exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // Admin-only access to site images (header/footer)
+    match /admin/site-images/{allPaths=**} {
+      allow read, write: if request.auth != null 
+        && exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // Public read access to active site images (for display on public site)
+    match /public/site-images/{allPaths=**} {
+      allow read: if true;
+    }
+
+    // User profile images (authenticated users only)
+    match /user-uploads/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if true; // Allow public read for profile images, comment avatars, etc.
+    }
+
+    // Post images and media (admin only for upload, public read)
+    match /posts/{postId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null 
+        && exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // Deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
