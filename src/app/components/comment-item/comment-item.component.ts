@@ -11,18 +11,18 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
   imports: [CommonModule, FormsModule, CommentFormComponent],
   template: `
     <div class="comment-item mb-3">
-      <div class="d-flex align-items-start gap-3">
+      <div class="comment-row d-flex align-items-start">
         <!-- User Avatar -->
         <img 
           [src]="comment.userPhoto || '/assets/default-avatar.png'" 
           [alt]="comment.userName"
-          class="rounded-circle flex-shrink-0"
+          class="rounded-circle flex-shrink-0 avatar"
           style="width: 40px; height: 40px; object-fit: cover;">
         
         <!-- Comment Content -->
         <div class="flex-grow-1">
           <!-- User Info & Time -->
-          <div class="d-flex align-items-center gap-2 mb-1">
+          <div class="user-meta d-flex align-items-center mb-1">
             <strong class="text-dark user-name">{{ comment.userName }}</strong>
             <small class="text-muted timestamp">{{ timeAgoDisplay }}</small>
             <small *ngIf="comment.updatedAt" class="text-muted">(edited)</small>
@@ -41,7 +41,7 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
               rows="3"
               maxlength="1000">
             </textarea>
-            <div class="d-flex gap-2">
+            <div class="edit-actions d-flex">
               <button 
                 class="btn btn-primary btn-sm"
                 (click)="saveEdit()"
@@ -57,13 +57,13 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
           </div>
           
           <!-- Action Buttons -->
-          <div class="d-flex align-items-center gap-3 text-muted">
+          <div class="action-row d-flex align-items-center text-muted">
             <!-- Like Button -->
             <button 
-              class="btn btn-link btn-sm p-0 text-muted d-flex align-items-center gap-1"
+              class="btn btn-link btn-sm p-0 text-muted d-flex align-items-center like-btn"
               (click)="toggleLike()"
               [disabled]="!isLoggedIn">
-              <i class="fas fa-heart" [class.text-danger]="userHasLiked"></i>
+              <i class="fas fa-heart icon-right-space" [class.text-danger]="userHasLiked"></i>
               <span>{{ comment.likes || 0 }}</span>
             </button>
             
@@ -73,7 +73,7 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
               class="btn btn-link btn-sm p-0 text-muted"
               (click)="toggleReply()"
               [disabled]="!isLoggedIn">
-              <i class="fas fa-reply me-1"></i>Reply
+              <i class="fas fa-reply icon-right-space"></i>Reply
             </button>
             
             <!-- Edit Button (Own Comments) -->
@@ -81,7 +81,7 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
               *ngIf="canEdit"
               class="btn btn-link btn-sm p-0 text-muted"
               (click)="startEdit()">
-              <i class="fas fa-edit me-1"></i>Edit
+              <i class="fas fa-edit icon-right-space"></i>Edit
             </button>
             
             <!-- Delete Button (Own Comments) -->
@@ -89,7 +89,7 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
               *ngIf="canDelete"
               class="btn btn-link btn-sm p-0 text-danger"
               (click)="deleteComment()">
-              <i class="fas fa-trash me-1"></i>Delete
+              <i class="fas fa-trash icon-right-space"></i>Delete
             </button>
           </div>
           
@@ -100,7 +100,7 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
               (click)="reportComment()"
               [disabled]="hasReported"
               [class.reported]="hasReported">
-              <i class="fas fa-flag me-1"></i>
+              <i class="fas fa-flag icon-right-space"></i>
               {{ hasReported ? 'Reported' : 'Report' }}
             </button>
           </div>
@@ -127,9 +127,22 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
       border-left: 3px solid var(--primary-color);
     }
     
+    /* Ensure horizontal space between avatar and content (works in BS4) */
+    .comment-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px; /* modern browsers */
+      flex-wrap: nowrap;
+    }
+    .comment-row > .avatar { /* fallback for older browsers */
+      margin-right: 12px;
+    }
+    
     .comment-content {
       line-height: 1.7;
       word-wrap: break-word;
+      overflow-wrap: anywhere;
+      word-break: break-word;
       letter-spacing: 0.3px;
     }
     
@@ -137,31 +150,35 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
       margin-bottom: 0.5rem;
       line-height: 1.7;
       letter-spacing: 0.3px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     
     /* Improve spacing for user info */
-    .d-flex.align-items-center.gap-2 {
+    .user-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
       margin-bottom: 0.75rem;
     }
-    
-    /* Add space between username and timestamp */
-    .user-name {
-      margin-right: 0.75rem;
-    }
-    
-    .timestamp {
-      margin-left: 0.25rem;
-    }
+    .user-name { margin-right: 8px; }
+    .timestamp { margin-left: 2px; }
     
     /* Better spacing for action buttons */
-    .d-flex.align-items-center.gap-3 {
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       margin-top: 0.75rem;
+      flex-wrap: wrap; /* prevent overlap on narrow widths */
     }
     
     .btn-link {
       text-decoration: none;
       font-size: 13px;
     }
+    .btn-link i.icon-right-space { margin-right: 4px; }
     
     .btn-link:hover {
       text-decoration: underline;
@@ -170,12 +187,26 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
     textarea {
       border: 1px solid #ddd;
       resize: vertical;
+      width: 100%;
+      min-height: 80px;
     }
     
     textarea:focus {
       border-color: var(--primary-color);
       box-shadow: 0 0 0 0.2rem rgba(2, 100, 103, 0.25);
     }
+    
+    /* Edit actions spacing */
+    .edit-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .edit-actions > * + * { margin-left: 8px; }
+    
+    /* Fallback spacing if flex gap unsupported */
+    .action-row > * + * { margin-left: 12px; }
+    .user-meta > * + * { margin-left: 8px; }
     
     .report-button-container {
       display: flex;

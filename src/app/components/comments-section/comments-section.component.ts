@@ -13,20 +13,20 @@ import { CommentItemComponent } from '../comment-item/comment-item.component';
   template: `
     <div class="comments-section mt-5">
       <!-- Comments Header -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex justify-content-between align-items-center header-row mb-4">
         <h4 class="mb-0">
-          <i class="fas fa-comments me-2 text-primary"></i>
+          <i class="fas fa-comments icon-right-space text-primary"></i>
           Comments ({{ comments.length }})
         </h4>
       </div>
 
       <!-- User Status -->
       <div *ngIf="isLoggedIn" class="user-status mb-3 p-3 bg-light rounded">
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center user-row">
           <img 
             [src]="currentUser?.photoURL || '/assets/default-avatar.png'"
             [alt]="currentUser?.displayName || 'User'"
-            class="rounded-circle"
+            class="rounded-circle avatar"
             style="width: 32px; height: 32px; object-fit: cover;">
           <span class="text-muted">
             Signed in as <strong>{{ currentUser?.displayName || 'Anonymous' }}</strong>
@@ -94,19 +94,23 @@ import { CommentItemComponent } from '../comment-item/comment-item.component';
       padding: 2rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
+    .header-row i.icon-right-space { margin-right: 8px; }
     
     .user-status {
       border: 1px solid #e0e0e0;
     }
+    .user-row { display: flex; align-items: center; gap: 12px; }
+    .user-row > .avatar { margin-right: 12px; }
     
     .replies {
       position: relative;
+      margin-left: 1.25rem; /* predictable indent */
     }
     
     .replies::before {
       content: '';
       position: absolute;
-      left: -20px;
+      left: -16px;
       top: 0;
       bottom: 0;
       width: 2px;

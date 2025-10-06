@@ -9,11 +9,11 @@ import { CommentsService } from '../../services/comments.service';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="comment-form bg-light p-3 rounded">
-      <div class="d-flex align-items-start gap-3">
+      <div class="form-row d-flex align-items-start">
         <img 
           [src]="userPhoto || '/assets/default-avatar.png'" 
           [alt]="userName"
-          class="rounded-circle"
+          class="rounded-circle avatar"
           style="width: 40px; height: 40px; object-fit: cover;">
         
         <div class="flex-grow-1">
@@ -54,10 +54,18 @@ import { CommentsService } from '../../services/comments.service';
     .comment-form {
       border: 1px solid #e0e0e0;
     }
+    .form-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px; /* modern */
+      flex-wrap: nowrap;
+    }
+    .form-row > .avatar { margin-right: 12px; }
     textarea {
       border: 1px solid #ddd;
       resize: vertical;
       min-height: 80px;
+      width: 100%;
     }
     textarea:focus {
       border-color: var(--primary-color);
