@@ -1,0 +1,94 @@
+<div class="floating-player" *ngIf="isVisible" [class.minimized]="isMinimized">
+  <!-- Minimized View -->
+  <div class="minimized-view" *ngIf="isMinimized">
+    <button 
+      class="play-btn mini"
+      (click)="togglePlay()"
+      [disabled]="audioState.loading">
+      <i *ngIf="audioState.loading" class="fas fa-spinner fa-spin"></i>
+      <div *ngIf="!audioState.loading && audioState.isPlaying" class="music-wave-mini">
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+      </div>
+      <i *ngIf="!audioState.loading && !audioState.isPlaying" class="fas fa-play"></i>
+    </button>
+    
+    <div class="track-info mini" (click)="toggleMinimize()">
+      <div class="track-title-mini">{{ getCurrentTrackTitle() }}</div>
+    </div>
+    
+    <button class="expand-btn" (click)="toggleMinimize()">
+      <i class="fas fa-chevron-up"></i>
+    </button>
+  </div>
+
+  <!-- Expanded View -->
+  <div class="expanded-view" *ngIf="!isMinimized">
+    <!-- Header -->
+    <div class="player-header">
+      <div class="track-info" (click)="goToPost()">
+        <div class="track-title">{{ getCurrentTrackTitle() }}</div>
+        <div class="track-subtitle">Click to view post</div>
+      </div>
+      
+      <div class="header-controls">
+        <button class="minimize-btn" (click)="toggleMinimize()">
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <button class="close-btn" (click)="stop()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="player-controls">
+      <button 
+        class="play-btn"
+        (click)="togglePlay()"
+        [disabled]="audioState.loading">
+        <i *ngIf="audioState.loading" class="fas fa-spinner fa-spin"></i>
+        <div *ngIf="!audioState.loading && audioState.isPlaying" class="music-wave">
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+        </div>
+        <i *ngIf="!audioState.loading && !audioState.isPlaying" class="fas fa-play"></i>
+      </button>
+      
+      <button class="stop-btn" (click)="stop()">
+        <i class="fas fa-stop"></i>
+      </button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-section" *ngIf="audioState.duration > 0">
+      <input 
+        type="range" 
+        class="progress-slider"
+        [value]="audioState.currentTime"
+        [max]="audioState.duration"
+        (input)="seekTo($event)"
+        step="0.1">
+      <div class="time-display">
+        {{ formatTime(audioState.currentTime) }} / {{ formatTime(audioState.duration) }}
+      </div>
+    </div>
+
+    <!-- Volume Control -->
+    <div class="volume-section">
+      <i class="fas fa-volume-up"></i>
+      <input 
+        type="range" 
+        class="volume-slider"
+        [value]="audioState.volume"
+        min="0" 
+        max="1" 
+        step="0.01"
+        (input)="setVolume($event)">
+      <span class="volume-percentage">{{ Math.round(audioState.volume * 100) }}%</span>
+    </div>
+  </div>
+</div>

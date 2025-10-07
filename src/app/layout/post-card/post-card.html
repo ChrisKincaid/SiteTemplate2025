@@ -1,8 +1,44 @@
 
 <div class="card shadow-effect" (click)="onCardClick()" [style.cursor]="'pointer'">
-    <img [src]="postData?.data?.postImg || 'https://images.pexels.com/photos/8693381/pexels-photo-8693381.jpeg'" 
-         [alt]="postData?.data?.title || 'post card image'" 
-         class="card-image-top">
+    <div class="image-container">
+        <img [src]="postData?.data?.postImg || 'https://images.pexels.com/photos/8693381/pexels-photo-8693381.jpeg'" 
+             [alt]="postData?.data?.title || 'post card image'" 
+             class="card-image-top">
+
+        <!-- Audio Indicator Badge -->
+        <div class="audio-indicator" *ngIf="hasAudio()">
+            <i class="fas fa-music"></i>
+        </div>
+
+        <!-- Volume Control - Right Side -->
+        <div class="volume-control-side" *ngIf="hasAudio()">
+            <div class="volume-controls-container">
+                <div class="volume-icon">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <input 
+                    type="range" 
+                    class="volume-slider-side"
+                    min="0" 
+                    max="1" 
+                    step="0.01"
+                    [value]="getCurrentVolume()"
+                    (input)="onVolumeChange($event)"
+                    (click)="$event.stopPropagation()">
+                <div class="volume-percentage">{{Math.round(getCurrentVolume() * 100)}}%</div>
+            </div>
+        </div>
+
+        <!-- Audio Player Overlay -->
+        <div class="audio-overlay" *ngIf="hasAudio()">
+            <app-audio-player 
+              [audioUrl]="getAudioUrl()!"
+              [postId]="postData?.id"
+              [trackTitle]="getAudioTitle()"
+              (click)="$event.stopPropagation()">
+            </app-audio-player>
+        </div>
+    </div>
 
     <!-- Date badge - commented out but can be restored later
     <small class="bg-light text-warning text-center date-badge">

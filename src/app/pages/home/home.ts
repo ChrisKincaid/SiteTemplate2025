@@ -34,45 +34,46 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.subscription = this.postService.loadData().subscribe({
       next: (val: any) => {
-        this.postsArray = val;
-        
-        // Filter featured posts
-        this.featuredPosts = val.filter((post: any) => post.data.isFeatured === true);
-        
-        // Get latest posts (ALL posts, sorted by creation date - newest first)
-        this.latestPosts = val
-          .sort((a: any, b: any) => {
-            // Handle different date formats
-            let dateA, dateB;
-            
-            // Check if it's a Firestore Timestamp (has .seconds property)
-            if (a.data.createdAt && a.data.createdAt.seconds) {
-              dateA = new Date(a.data.createdAt.seconds * 1000);
-            } else if (a.data.createdAt) {
-              // Handle string dates or other formats
-              dateA = new Date(a.data.createdAt);
-            } else {
-              // Fallback to other possible date fields
-              dateA = new Date(a.data.dateCreated || a.data.publishedAt || a.data.timestamp || 0);
-            }
-            
-            if (b.data.createdAt && b.data.createdAt.seconds) {
-              dateB = new Date(b.data.createdAt.seconds * 1000);
-            } else if (b.data.createdAt) {
-              dateB = new Date(b.data.createdAt);
-            } else {
-              dateB = new Date(b.data.dateCreated || b.data.publishedAt || b.data.timestamp || 0);
-            }
-            
-            return dateB.getTime() - dateA.getTime();
-          });
-        
-        // Initialize displayed posts with first 24
-        this.updateDisplayedPosts();
-        
         // Use setTimeout to avoid change detection issues
         setTimeout(() => {
+          this.postsArray = val;
+          
+          // Filter featured posts
+          this.featuredPosts = val.filter((post: any) => post.data.isFeatured === true);
+          
+          // Get latest posts (ALL posts, sorted by creation date - newest first)
+          this.latestPosts = val
+            .sort((a: any, b: any) => {
+              // Handle different date formats
+              let dateA, dateB;
+              
+              // Check if it's a Firestore Timestamp (has .seconds property)
+              if (a.data.createdAt && a.data.createdAt.seconds) {
+                dateA = new Date(a.data.createdAt.seconds * 1000);
+              } else if (a.data.createdAt) {
+                // Handle string dates or other formats
+                dateA = new Date(a.data.createdAt);
+              } else {
+                // Fallback to other possible date fields
+                dateA = new Date(a.data.dateCreated || a.data.publishedAt || a.data.timestamp || 0);
+              }
+              
+              if (b.data.createdAt && b.data.createdAt.seconds) {
+                dateB = new Date(b.data.createdAt.seconds * 1000);
+              } else if (b.data.createdAt) {
+                dateB = new Date(b.data.createdAt);
+              } else {
+                dateB = new Date(b.data.dateCreated || b.data.publishedAt || b.data.timestamp || 0);
+              }
+              
+              return dateB.getTime() - dateA.getTime();
+            });
+          
+          // Initialize displayed posts with first 24
+          this.updateDisplayedPosts();
+          
           this.cdr.detectChanges();
+          
           // Reinitialize carousel after data is loaded
           setTimeout(() => {
             this.initializeCarousel();

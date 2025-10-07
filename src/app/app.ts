@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { Header } from './layout/header/header';
 import { CategoryNavbar } from './layout/category-navbar/category-navbar';
 import { Footer } from './layout/footer/footer';
+import { FloatingAudioPlayerComponent } from './components/floating-audio-player/floating-audio-player.component';
 import { SiteThemeService } from './services/site-theme.service';
 import { FaviconService } from './services/favicon.service';
 
@@ -12,7 +13,8 @@ import { FaviconService } from './services/favicon.service';
     RouterOutlet, 
     Header, 
     CategoryNavbar, 
-    Footer
+    Footer,
+    FloatingAudioPlayerComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
