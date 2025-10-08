@@ -10,6 +10,7 @@ export interface AudioState {
   duration: number;
   volume: number;
   loading: boolean;
+  floatingPlayerVisible: boolean;
 }
 
 @Injectable({
@@ -26,33 +27,125 @@ export class AudioPlayerService {
     currentTime: 0,
     duration: 0,
     volume: 0.7,
-    loading: false
+    loading: false,
+    floatingPlayerVisible: false
   });
 
   public audioState$: Observable<AudioState> = this.audioStateSubject.asObservable();
 
   constructor() {
+    console.log('🎵 AudioPlayerService constructor called at:', new Date().toISOString());
     this.initializeAudio();
+    
+    // Delay localStorage restoration to avoid hydration conflicts
+    setTimeout(() => {
+      this.restoreFromLocalStorage();
+    }, 100);
+  }
+
+  private saveToLocalStorage(): void {
+    try {
+      // Check if we're in the browser
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        return;
+      }
+
+      const state = this.audioStateSubject.value;
+      if (state.currentTrack) {
+        const stateToSave = {
+          currentTrack: state.currentTrack,
+          currentPostId: state.currentPostId,
+          currentTrackTitle: state.currentTrackTitle,
+          currentTime: state.currentTime,
+          duration: state.duration,
+          volume: state.volume,
+          isPlaying: state.isPlaying
+        };
+        localStorage.setItem('audioPlayerState', JSON.stringify(stateToSave));
+        console.log('🎵 Saved audio state to localStorage:', stateToSave);
+      } else {
+        // Clear localStorage if no track
+        localStorage.removeItem('audioPlayerState');
+      }
+    } catch (error) {
+      console.error('Error saving audio state to localStorage:', error);
+    }
+  }
+
+  private restoreFromLocalStorage(): void {
+    try {
+      // Check if we're in the browser (not during SSR)
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        return;
+      }
+
+      const savedState = localStorage.getItem('audioPlayerState');
+      if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        console.log('🎵 Restoring audio state from localStorage:', parsedState);
+        
+        // Load the audio file first
+        if (this.audio && parsedState.currentTrack) {
+          this.audio.src = parsedState.currentTrack;
+          this.audio.load();
+          
+          // Set the time when metadata loads
+          this.audio.addEventListener('loadedmetadata', () => {
+            if (this.audio && parsedState.currentTime) {
+              this.audio.currentTime = parsedState.currentTime;
+              console.log('🎵 Audio restored to position:', parsedState.currentTime);
+            }
+          }, { once: true });
+        }
+
+        // Restore state - always start paused due to browser autoplay policy
+        this.updateState({
+          ...parsedState,
+          isPlaying: false, // Always start paused due to browser policy
+          loading: false,
+          floatingPlayerVisible: true
+        });
+        
+        // Log a helpful message for the user
+        if (parsedState.isPlaying) {
+          console.log('🎵 Audio restored! Click the play button to resume from', Math.floor(parsedState.currentTime), 'seconds');
+        }
+      }
+    } catch (error) {
+      console.error('Error restoring audio state from localStorage:', error);
+    }
   }
 
   private initializeAudio(): void {
+    console.log('🎵 AudioPlayerService.initializeAudio() called');
     this.audio = new Audio();
     this.audio.volume = 0.7;
     this.audio.preload = 'metadata';
     
-    // Audio event listeners
+    // Audio event listeners with detailed logging
     this.audio.addEventListener('loadstart', () => {
-      console.log('🎵 Audio loadstart');
+      console.log('🎵 Audio event: loadstart');
       this.updateState({ loading: true });
+    });
+
+    this.audio.addEventListener('play', () => {
+      console.log('🎵 Audio event: play - Audio started playing');
+    });
+
+    this.audio.addEventListener('pause', () => {
+      console.log('🎵 Audio event: pause - Audio was paused');
+      console.trace('🎵 Stack trace for audio pause:');
+    });
+
+    this.audio.addEventListener('ended', () => {
+      console.log('🎵 Audio event: ended - Audio finished playing');
     });
     
     this.audio.addEventListener('canplay', () => {
-      console.log('🎵 Audio canplay');
       this.updateState({ loading: false });
     });
     
     this.audio.addEventListener('loadedmetadata', () => {
-      console.log('🎵 Audio metadata loaded');
       this.updateState({ 
         duration: this.audio?.duration || 0,
         loading: false 
@@ -67,12 +160,10 @@ export class AudioPlayerService {
     });
     
     this.audio.addEventListener('ended', () => {
-      console.log('🎵 Audio ended');
       this.stop();
     });
     
     this.audio.addEventListener('error', (e) => {
-      console.error('🎵 Audio playback error:', e);
       this.updateState({ 
         loading: false, 
         isPlaying: false 
@@ -80,17 +171,15 @@ export class AudioPlayerService {
     });
     
     this.audio.addEventListener('abort', () => {
-      console.log('🎵 Audio aborted');
       this.updateState({ loading: false });
     });
   }
 
   async play(audioUrl: string, postId: string, trackTitle?: string): Promise<void> {
+    console.log('🎵 AudioPlayerService.play() called with:', { audioUrl: audioUrl.substring(0, 50) + '...', postId, trackTitle });
     if (!this.audio) return;
 
     const currentState = this.audioStateSubject.value;
-    
-    console.log('🎵 Play requested for:', postId, audioUrl);
     
     // If same track is playing, pause it
     if (currentState.isPlaying && currentState.currentPostId === postId) {
@@ -101,13 +190,12 @@ export class AudioPlayerService {
 
     // Stop any currently playing audio
     if (currentState.isPlaying) {
-      console.log('🎵 Stopping current track...');
+      console.log('🎵 Different track playing, stopping current...');
       this.stop();
     }
 
     try {
       const finalTrackTitle = trackTitle || 'Audio Track';
-      console.log('🎵 AudioService play() - trackTitle received:', trackTitle, 'using:', finalTrackTitle);
       
       this.updateState({ 
         loading: true, 
@@ -117,22 +205,18 @@ export class AudioPlayerService {
         isPlaying: false
       });
 
-      console.log('🎵 Setting audio source:', audioUrl);
       this.audio.src = audioUrl;
       this.audio.volume = currentState.volume; // Ensure volume is maintained
       this.audio.load(); // Explicitly load the audio
       
-      console.log('🎵 Attempting to play...');
       await this.audio.play();
       
-      console.log('🎵 Play successful');
       this.updateState({ 
         isPlaying: true, 
-        loading: false 
+        loading: false,
+        floatingPlayerVisible: true
       });
-      console.log('🎵 Updated state after successful play:', this.audioStateSubject.value);
     } catch (error) {
-      console.error('🎵 Error playing audio:', error);
       this.updateState({ 
         loading: false, 
         isPlaying: false,
@@ -143,6 +227,8 @@ export class AudioPlayerService {
   }
 
   pause(): void {
+    console.log('🎵 AudioPlayerService.pause() called');
+    console.trace('🎵 Stack trace for pause() call:');
     if (this.audio && !this.audio.paused) {
       this.audio.pause();
       this.updateState({ isPlaying: false });
@@ -150,11 +236,11 @@ export class AudioPlayerService {
   }
 
   stop(): void {
-    console.log('🎵 Stop requested');
     if (this.audio) {
       this.audio.pause();
       this.audio.currentTime = 0;
       this.audio.src = ''; // Clear the source
+      localStorage.removeItem('audioPlayerState'); // Clear persisted state
       this.updateState({
         isPlaying: false,
         currentTrack: null,
@@ -162,9 +248,9 @@ export class AudioPlayerService {
         currentTrackTitle: null,
         currentTime: 0,
         duration: 0,
-        loading: false
+        loading: false,
+        floatingPlayerVisible: false
       });
-      console.log('🎵 Audio stopped');
     }
   }
 
@@ -172,10 +258,7 @@ export class AudioPlayerService {
     if (this.audio) {
       const clampedVolume = Math.max(0, Math.min(1, volume));
       this.audio.volume = clampedVolume;
-      console.log('🎵 Volume set to:', clampedVolume, 'Audio element volume:', this.audio.volume);
       this.updateState({ volume: this.audio.volume });
-    } else {
-      console.log('🎵 No audio element to set volume on');
     }
   }
 
@@ -189,10 +272,28 @@ export class AudioPlayerService {
     const currentState = this.audioStateSubject.value;
     const newState = { ...currentState, ...partialState };
     
+    // Log when currentTrack is being cleared
+    if (partialState.currentTrack === null && currentState.currentTrack !== null) {
+      console.log('🎵 AudioPlayerService: currentTrack being cleared!');
+      console.log('🎵 Previous state:', currentState);
+      console.log('🎵 Update being applied:', partialState);
+      console.trace('🎵 Stack trace for currentTrack clearing:');
+    }
+    
+    // Log all state updates for debugging
+    if (partialState.currentTrack || currentState.currentTrack) {
+      console.log('🎵 State update:', {
+        from: currentState.currentTrack ? 'HAS_TRACK' : 'NO_TRACK',
+        to: newState.currentTrack ? 'HAS_TRACK' : 'NO_TRACK',
+        playing: newState.isPlaying,
+        url: newState.currentTrack?.substring(0, 50) + '...'
+      });
+    }
+    
     // Use setTimeout to prevent ExpressionChangedAfterItHasBeenChecked errors
     setTimeout(() => {
       this.audioStateSubject.next(newState);
-      console.log('🎵 AudioState updated:', newState);
+      this.saveToLocalStorage();
     }, 0);
   }
 
@@ -202,13 +303,30 @@ export class AudioPlayerService {
 
   isCurrentTrack(postId: string): boolean {
     const currentPostId = this.audioStateSubject.value.currentPostId;
-    const result = currentPostId === postId;
-    console.log(`🔍 [Service] isCurrentTrack check:`, {
-      postId,
-      currentPostId,
-      result,
-      comparison: `"${currentPostId}" === "${postId}"`
-    });
-    return result;
+    return currentPostId === postId;
   }
+
+  resume(): void {
+    if (this.audio && this.audioStateSubject.value.currentTrack) {
+      this.audio.play().then(() => {
+        this.updateState({ isPlaying: true });
+      }).catch(error => {
+        console.error('Error resuming audio:', error);
+      });
+    }
+  }
+
+
+
+  // Methods to manage floating player visibility
+  setFloatingPlayerVisible(visible: boolean): void {
+    this.updateState({ floatingPlayerVisible: visible });
+  }
+
+  isFloatingPlayerVisible(): boolean {
+    return this.audioStateSubject.value.floatingPlayerVisible;
+  }
+
+
+
 }

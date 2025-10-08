@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostCard } from '../../layout/post-card/post-card';
 import { CommentsSectionComponent } from '../../components/comments-section/comments-section.component';
+import { AudioPlayerComponent } from '../../components/audio-player/audio-player.component';
+import { AudioPlayerService } from '../../services/audio-player.service';
 import { Posts } from '../../services/posts';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-single-post',
-  imports: [CommonModule, PostCard, CommentsSectionComponent], 
+  imports: [CommonModule, PostCard, CommentsSectionComponent, AudioPlayerComponent], 
   templateUrl: './single-post.html',
   styleUrl: './single-post.css'
 })
@@ -18,12 +20,18 @@ export class SinglePost implements OnInit, OnDestroy {
   randomFeaturedPosts: any[] = [];
   private subscription?: Subscription;
   private routeSubscription?: Subscription;
+  private audioSubscription?: Subscription;
   private viewedPosts: Set<string> = new Set(); // Track viewed posts to prevent multiple increments
+  
+  // Audio player visibility state
+  showInlinePlayer = true;
+  floatingPlayerVisible = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private postService: Posts,
+    private audioPlayerService: AudioPlayerService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -36,6 +44,19 @@ export class SinglePost implements OnInit, OnDestroy {
         this.loadPostData(postId);
       }
     });
+
+    // Subscribe to audio player state to manage inline player visibility
+    this.audioSubscription = this.audioPlayerService.audioState$.subscribe(state => {
+      this.floatingPlayerVisible = state.floatingPlayerVisible;
+      
+      // Update visibility when audio state changes
+      this.updateInlinePlayerVisibility();
+      this.cdr.detectChanges();
+    });
+
+    // Initialize floating player visibility from current state
+    const currentState = this.audioPlayerService.getCurrentState();
+    this.floatingPlayerVisible = currentState.floatingPlayerVisible;
   }
 
   private loadPostData(postId: string) {
@@ -57,6 +78,9 @@ export class SinglePost implements OnInit, OnDestroy {
         const availableFeatured = this.featuredPosts.filter(post => post.id !== postId);
         this.randomFeaturedPosts = this.getRandomPosts(availableFeatured, 3);
         
+        // Update audio player visibility now that we have post data
+        this.updateInlinePlayerVisibility();
+        
         // Trigger change detection
         this.cdr.detectChanges();
       },
@@ -73,6 +97,25 @@ export class SinglePost implements OnInit, OnDestroy {
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }
+    if (this.audioSubscription) {
+      this.audioSubscription.unsubscribe();
+    }
+  }
+
+  private updateInlinePlayerVisibility(): void {
+    if (!this.hasAudio()) {
+      this.showInlinePlayer = false;
+      return;
+    }
+
+    const audioState = this.audioPlayerService.getCurrentState();
+    
+    // Hide inline player if ANY audio is playing (regardless of which post)
+    // OR if this specific post's audio is loaded (even if paused)
+    const shouldHideInlinePlayer = audioState.isPlaying || 
+                                  (audioState.currentPostId === this.currentPost?.id && audioState.currentTrack);
+    
+    this.showInlinePlayer = !shouldHideInlinePlayer;
   }
 
   private getRandomPosts(posts: any[], count: number): any[] {
@@ -87,5 +130,35 @@ export class SinglePost implements OnInit, OnDestroy {
 
   trackBySubcategory(index: number, item: string) {
     return item;
+  }
+
+  // Check if current post has audio
+  hasAudio(): boolean {
+    return !!(this.currentPost?.data?.media?.type === 'audio' && 
+             this.currentPost?.data?.media?.audio?.previewUrl);
+  }
+
+  // Get audio URL for playback
+  getAudioUrl(): string | null {
+    if (this.hasAudio()) {
+      return this.currentPost.data.media.audio.previewUrl;
+    }
+    return null;
+  }
+
+  // Get audio title
+  getAudioTitle(): string {
+    if (this.hasAudio()) {
+      return this.currentPost.data.media.audio.title || this.currentPost.data.title || 'Audio Track';
+    }
+    return '';
+  }
+
+  // Get audio artist/author
+  getAudioArtist(): string {
+    if (this.hasAudio()) {
+      return this.currentPost.data.media.audio.artist || this.currentPost.data.author || 'Unknown Artist';
+    }
+    return '';
   }
 }

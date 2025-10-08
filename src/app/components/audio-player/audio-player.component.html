@@ -1,4 +1,43 @@
-<div class="audio-player-overlay" *ngIf="audioUrl">
+<!-- Standalone Player (for single post pages) -->
+<div class="audio-player-standalone" *ngIf="audioUrl && !compact">
+  <div class="player-controls">
+    <!-- Play/Stop Button -->
+    <button 
+      class="btn btn-primary control-btn-large"
+      (click)="togglePlayStop($event)"
+      [disabled]="audioState.loading && isCurrentTrack">
+      <i *ngIf="shouldShowLoading()" class="fas fa-spinner fa-spin"></i>
+      <i *ngIf="shouldShowPlay() && !shouldShowLoading() && !shouldShowStop()" class="fas fa-play"></i>
+      <div *ngIf="shouldShowStop()" class="music-wave-standalone">
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+      </div>
+    </button>
+
+    <!-- Track Info -->
+    <div class="track-info">
+      <div class="track-title">{{ trackTitle || 'Audio Track' }}</div>
+      <div class="track-time" *ngIf="audioState.duration > 0">
+        {{ formatTime(audioState.currentTime) }} / {{ formatTime(audioState.duration) }}
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container" *ngIf="isCurrentTrack && audioState.duration > 0">
+      <input 
+        type="range" 
+        class="progress-slider-main"
+        [value]="audioState.currentTime"
+        [max]="audioState.duration"
+        (input)="seekTo($event)"
+        step="0.1">
+    </div>
+  </div>
+</div>
+
+<!-- Overlay Player (for post cards) -->
+<div class="audio-player-overlay" *ngIf="audioUrl && compact">
   <!-- Compact control row for overlay -->
   <div class="overlay-controls">
     <!-- Single Play/Stop Toggle Button -->

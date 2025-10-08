@@ -3,7 +3,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 1000;
+  z-index: 9999;
   background: linear-gradient(135deg, #2c3e50, #34495e);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -44,6 +44,27 @@
 
 .play-btn.mini:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+.close-btn.mini {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+}
+
+.close-btn.mini:hover {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
 }
 
 .track-info.mini {

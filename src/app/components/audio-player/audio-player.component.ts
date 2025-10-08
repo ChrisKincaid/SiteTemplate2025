@@ -14,6 +14,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   @Input() audioUrl!: string;
   @Input() postId!: string;
   @Input() trackTitle?: string;
+  @Input() compact: boolean = false;
 
   Math = Math; // Make Math available in template
 
@@ -25,7 +26,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     currentTime: 0,
     duration: 0,
     volume: 0.7,
-    loading: false
+    loading: false,
+    floatingPlayerVisible: false
   };
 
   private subscription?: Subscription;
@@ -38,7 +40,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.audioPlayerService.audioState$.subscribe(
       state => {
-        console.log(`🎵 [${this.postId}] AudioState updated:`, state);
         this.audioState = state;
         this.cdr.detectChanges(); // Force change detection
       }
@@ -57,7 +58,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     if (event) {
       event.stopPropagation();
     }
-    console.log('🎵 Toggle play clicked');
     this.audioPlayerService.play(this.audioUrl, this.postId, this.trackTitle);
   }
 
@@ -65,7 +65,6 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     if (event) {
       event.stopPropagation();
     }
-    console.log('🎵 Stop clicked');
     this.audioPlayerService.stop();
   }
 
@@ -97,67 +96,35 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     
     if (this.isCurrentTrack && this.audioState.isPlaying) {
       // If this track is playing, stop it
-      console.log('🎵 Stop clicked');
       this.audioPlayerService.stop();
     } else {
       // If not playing (or different track), start playing
-      console.log('🎵 Play clicked - trackTitle:', this.trackTitle);
       this.audioPlayerService.play(this.audioUrl, this.postId, this.trackTitle);
     }
   }
 
-  // Debug methods to understand what's happening
+  // Methods to determine what to show
   shouldShowLoading(): boolean {
-    const result = this.audioState.loading && this.isCurrentTrack;
-    console.log(`🎵 [${this.postId}] shouldShowLoading:`, result, {
-      loading: this.audioState.loading,
-      isCurrentTrack: this.isCurrentTrack
-    });
-    return result;
+    return this.audioState.loading && this.isCurrentTrack;
   }
 
   shouldShowPlay(): boolean {
     // Show play button if:
     // 1. This track is NOT the current track (regardless of loading state)
     // 2. OR this IS the current track but not playing and not loading
-    const result = !this.isCurrentTrack || (!this.audioState.isPlaying && !this.audioState.loading);
-    console.log(`🎵 [${this.postId}] shouldShowPlay:`, result, {
-      loading: this.audioState.loading,
-      isCurrentTrack: this.isCurrentTrack,
-      isPlaying: this.audioState.isPlaying,
-      currentPostId: this.audioState.currentPostId
-    });
-    return result;
+    return !this.isCurrentTrack || (!this.audioState.isPlaying && !this.audioState.loading);
   }
 
   shouldShowPause(): boolean {
-    const result = this.isCurrentTrack && this.audioState.isPlaying && !this.audioState.loading;
-    console.log(`🎵 [${this.postId}] shouldShowPause:`, result, {
-      loading: this.audioState.loading,
-      isCurrentTrack: this.isCurrentTrack,
-      isPlaying: this.audioState.isPlaying
-    });
-    return result;
+    return this.isCurrentTrack && this.audioState.isPlaying && !this.audioState.loading;
   }
 
   shouldShowStop(): boolean {
     // Show stop button when this track is currently playing
-    const result = this.isCurrentTrack && this.audioState.isPlaying && !this.audioState.loading;
-    console.log(`🎵 [${this.postId}] shouldShowStop:`, result, {
-      loading: this.audioState.loading,
-      isCurrentTrack: this.isCurrentTrack,
-      isPlaying: this.audioState.isPlaying,
-      allConditions: `isCurrentTrack: ${this.isCurrentTrack}, isPlaying: ${this.audioState.isPlaying}, notLoading: ${!this.audioState.loading}`
-    });
-    return result;
+    return this.isCurrentTrack && this.audioState.isPlaying && !this.audioState.loading;
   }
 
   shouldShowVolumeControl(): boolean {
-    const result = this.isCurrentTrack;
-    console.log(`🎵 [${this.postId}] shouldShowVolumeControl:`, result, {
-      isCurrentTrack: this.isCurrentTrack,
-      currentPostId: this.audioState.currentPostId
-    });
-    return result;
+    return this.isCurrentTrack;
   }
 }

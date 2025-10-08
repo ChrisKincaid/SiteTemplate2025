@@ -42,9 +42,7 @@ export class PostCard {
   // Get audio title
   getAudioTitle(): string {
     if (this.hasAudio()) {
-      const title = this.postData.data.media.audio.title || 'Audio Track';
-      console.log('🎵 PostCard getAudioTitle:', title, 'Full audio data:', this.postData.data.media.audio);
-      return title;
+      return this.postData.data.media.audio.title || 'Audio Track';
     }
     return '';
   }
@@ -53,7 +51,6 @@ export class PostCard {
   onVolumeChange(event: any): void {
     event.stopPropagation();
     const volume = parseFloat(event.target.value);
-    console.log('🎵 PostCard volume change:', volume);
     this.audioPlayerService.setVolume(volume);
   }
 

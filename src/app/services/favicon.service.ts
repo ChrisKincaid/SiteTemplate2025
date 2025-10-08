@@ -25,10 +25,10 @@ export class FaviconService {
         // Update all favicon links in the document head
         this.updateFaviconLinks(files);
       } else {
-        console.log('No active favicon found in siteImages collection');
+        // No active favicon found
       }
     } catch (error) {
-      console.error('Error loading favicon configuration:', error);
+      // Error loading favicon configuration
     }
   }
 
@@ -51,8 +51,7 @@ export class FaviconService {
         { rel: 'icon', type: 'image/png', sizes: '512x512', href: files['android-chrome-512x512.png'] }
       ];
     } else {
-      // No custom favicon files available
-      console.log('No favicon files available, using browser defaults');
+      // No custom favicon files available, using browser defaults
       return;
     }
 
@@ -66,8 +65,6 @@ export class FaviconService {
         head.appendChild(link);
       }
     });
-
-    console.log('Favicon updated successfully');
   }
 
   // Method to manually refresh favicon (can be called when needed)
